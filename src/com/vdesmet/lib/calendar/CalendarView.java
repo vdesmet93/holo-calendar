@@ -177,7 +177,8 @@ public class CalendarView extends LinearLayout{
 
         final ViewGroup headers = (ViewGroup) inflater.inflate(R.layout.lib_calendar_headers, this, false);
 
-        for(int dayOfWeek = firstDayOfWeek; dayOfWeek <= lastDayOfWeek; dayOfWeek++) {
+        int i = 0;
+        for(int dayOfWeek = firstDayOfWeek; i < 7; dayOfWeek++, i++) {
             final TextView header = (TextView) inflater.inflate(R.layout.lib_calendar_single_header, headers, false);
             final String name = getNameForDay(dayOfWeek, resources);
 
