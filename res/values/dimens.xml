@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="lib_calendar_day_size">44dp</dimen>
+
+    <dimen name="lib_category_view_padding_startend">5dp</dimen>
+
+    <dimen name="lib_category_size">4dp</dimen>
+
+    <dimen name="lib_category_padding_sides">1.5dp</dimen>
+
+    <dimen name="lib_category_padding_bottom">4dp</dimen>
+
+    <dimen name="lib_calendar_day_textsize">22dp</dimen>
+</resources>

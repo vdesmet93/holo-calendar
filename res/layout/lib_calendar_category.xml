@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<View
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="@dimen/lib_category_size"
+    android:layout_width="@dimen/lib_category_size"
+    android:layout_marginLeft="@dimen/lib_category_padding_sides"
+    android:layout_marginRight="@dimen/lib_category_padding_sides" />
