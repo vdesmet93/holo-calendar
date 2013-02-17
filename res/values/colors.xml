@@ -6,4 +6,7 @@
     <color name="lib_calendar_day_background_disabled">#f2f2f2</color>
     <color name="lib_calendar_day_background">@android:color/white</color>
 
+
+    <color name="lib_calendar_background">#e5e5e5</color>
+
 </resources>
