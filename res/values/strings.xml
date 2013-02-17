@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ACTIVITY_ENTRY_NAME</string>
+    <!-- Names for the header, monday - sunday-->
     <string name="lib_header_monday">MON</string>
+    <string name="lib_header_tuesday">TUE</string>
+    <string name="lib_header_wednesday">WED</string>
+    <string name="lib_header_thursday">THU</string>
+    <string name="lib_header_friday">FRI</string>
+    <string name="lib_header_saturday">SAT</string>
+    <string name="lib_header_sunday">SUN</string>
 </resources>

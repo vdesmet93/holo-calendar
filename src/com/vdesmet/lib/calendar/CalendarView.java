@@ -20,6 +20,7 @@ public class CalendarView extends LinearLayout{
 
     private int mCurrentMonth;
     private Calendar mCalendar;
+    private Calendar mCalendarFirstDay;
 
     private int mFirstDayOfWeek;
     private int mLastDayOfWeek;
@@ -38,22 +39,27 @@ public class CalendarView extends LinearLayout{
 
         mIsViewInitialized = false;
         mFirstDayOfWeek = Calendar.MONDAY;
+        mLastDayOfWeek = -1;
 
     }
 
-    public void setFirstDayOfWeek(int day) {
+    public void setFirstDayOfWeek(final int day) {
         if(day < Calendar.SUNDAY || day > Calendar.SATURDAY) {
             throw new IllegalArgumentException("day must be between " + Calendar.SUNDAY + " and " + Calendar.SATURDAY);
         }
 
         mFirstDayOfWeek = day;
 
-        if(day != Calendar.SUNDAY) {
-            mLastDayOfWeek = day - 1;
+        // update calendar
+        updateCalendar();
+    }
+
+    public void setLastDayOfWeek(final int day) {
+        if(day < Calendar.SUNDAY || day > Calendar.SATURDAY) {
+            throw new IllegalArgumentException("day must be between " + Calendar.SUNDAY + " and " + Calendar.SATURDAY);
         }
-        else {
-            mLastDayOfWeek = Calendar.SATURDAY;
-        }
+
+        mLastDayOfWeek = day;
 
     }
 
@@ -66,9 +72,21 @@ public class CalendarView extends LinearLayout{
         calendar.setTimeInMillis(monthInMillis);
 
         this.mCurrentMonth = calendar.get(Calendar.MONTH);
+        this.mCalendar = calendar;
+        updateCalendar();
+
+    }
+
+    private void updateCalendar() {
+        // create a new calendar
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(mCalendar.getTimeInMillis());
+
+        // change calendar to first day of month
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
 
         // change day to firstDayOfWeek
-        final int calendarDay = calendar.get(Calendar.DAY_OF_WEEK); // 4 -> Wednesday
+        final int calendarDay = calendar.get(Calendar.DAY_OF_WEEK);
 
         // get the number of days we need to remove from the calendar, to start the calendar at mFirstDayOfWeek;
         final int daysTowithdraw = calendarDay - mFirstDayOfWeek;
@@ -83,17 +101,29 @@ public class CalendarView extends LinearLayout{
         calendar.clear(Calendar.MILLISECOND);
 
         // set calendar
-        this.mCalendar = calendar;
+        this.mCalendarFirstDay = calendar;
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void initView() {
 
+        // if no custom lastDayOfWeek was set, change it to the day before the first day so we show all 7 days
+        if(mLastDayOfWeek == -1) {
+            mLastDayOfWeek = mFirstDayOfWeek - 1;
+            if(mLastDayOfWeek <= 0) {
+                mLastDayOfWeek = 7;
+            }
+        }
+
+        // create the headers for the day of the week
         createHeaders();
 
+        // setup the variables we'll need
         final Context context = getContext();
         final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final DayAdapter adapter = mDayAdapter;
-        final Calendar month = mCalendar;
+        final Calendar month = mCalendarFirstDay;
+        final int firstDayOfWeek = mFirstDayOfWeek;
         final int lastDayOfWeek = mLastDayOfWeek;
         final int currentMonth = mCurrentMonth;
         final int dayDisabledBackgroundColor = getResources().getColor(R.color.lib_calendar_day_background_disabled);
@@ -101,8 +131,31 @@ public class CalendarView extends LinearLayout{
 
         ViewGroup weekLayout = (ViewGroup) inflater.inflate(R.layout.lib_calendar_week, this, false);
 
-        // continue adding days until we've done the day at the end of the week in the next month
+        // continue adding days until we've done the day at the end of the week(usually in the next month)
         while(month.get(Calendar.MONTH) <= currentMonth || month.get(Calendar.DAY_OF_WEEK) != lastDayOfWeek + 1) {
+
+            // check if we need to add this day, if not, move to the next
+            final int dayOfWeek = month.get(Calendar.DAY_OF_WEEK);
+            boolean moveToNext = false;
+            if(lastDayOfWeek < firstDayOfWeek) {
+                if((dayOfWeek < firstDayOfWeek && dayOfWeek > lastDayOfWeek) ||
+                        (dayOfWeek > lastDayOfWeek && dayOfWeek < firstDayOfWeek)) {
+
+                    // we don't want to have this dayOfWeek in our calendar, so move to the next one
+                    moveToNext = true;
+                }
+            }
+            else if(dayOfWeek < firstDayOfWeek || dayOfWeek > lastDayOfWeek) {
+                // we don't want to have this dayOfWeek in our calendar, so move to the next one
+                moveToNext = true;
+            }
+            if(moveToNext) {
+                // move to the next day
+                month.add(Calendar.DAY_OF_WEEK, 1);
+                continue;
+
+            }
+            // setup variables and layouts for this day
             final long timeInMillis = month.getTimeInMillis();
             final ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.lib_calendar_day, this, false);
             final TextView dayTextView = (TextView) layout.findViewById(R.id.lib_calendar_day_text);
@@ -110,14 +163,14 @@ public class CalendarView extends LinearLayout{
 
 
             // allow the adapter to update the TextView
-            // e.g. change TypeFace, font size, etc
+            // e.g. change TypeFace, font size, color based on the time
             adapter.updateTextView(dayTextView, timeInMillis);
 
             // set the current day: 1-31
             final int dayOfMonth = month.get(Calendar.DAY_OF_MONTH);
             dayTextView.setText(String.valueOf(dayOfMonth));
 
-            // check if we need to disable the view
+            // check if we need to disable the view, because it's in another month
             if(month.get(Calendar.MONTH) != currentMonth) {
                 // change the appearance if it's disabled
                 layout.setBackgroundColor(dayDisabledBackgroundColor);
@@ -149,7 +202,7 @@ public class CalendarView extends LinearLayout{
             // add layout to view
             weekLayout.addView(layout);
 
-            if(month.get(Calendar.DAY_OF_WEEK) == lastDayOfWeek) {
+            if(dayOfWeek == lastDayOfWeek) {
                 // this is the last day in the week/row, add a new one
                 addView(weekLayout);
 
@@ -172,26 +225,55 @@ public class CalendarView extends LinearLayout{
         final Context context = getContext();
         final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final Resources resources = context.getResources();
+        final DayAdapter adapter = mDayAdapter;
         final int firstDayOfWeek = mFirstDayOfWeek;
         final int lastDayOfWeek = mLastDayOfWeek;
 
         final ViewGroup headers = (ViewGroup) inflater.inflate(R.layout.lib_calendar_headers, this, false);
 
-        int i = 0;
-        for(int dayOfWeek = firstDayOfWeek; i < 7; dayOfWeek++, i++) {
+        int dayOfWeek = firstDayOfWeek;
+
+        do {
             final TextView header = (TextView) inflater.inflate(R.layout.lib_calendar_single_header, headers, false);
             final String name = getNameForDay(dayOfWeek, resources);
+
+            adapter.updateHeaderTextView(header, dayOfWeek);
 
             header.setText(name);
 
             headers.addView(header);
-        }
+
+            // increment dayOfWeek, make sure it's a valid day
+            dayOfWeek = dayOfWeek % 7;
+            dayOfWeek++;
+
+        } while(dayOfWeek != lastDayOfWeek + 1);
 
         addView(headers);
     }
 
     private String getNameForDay(final int dayOfWeek, final Resources resources) {
-        return resources.getString(R.string.lib_header_monday);
+        switch(dayOfWeek) {
+            case Calendar.MONDAY:
+                return resources.getString(R.string.lib_header_monday);
+            case Calendar.TUESDAY:
+                return resources.getString(R.string.lib_header_tuesday);
+            case Calendar.WEDNESDAY:
+                return resources.getString(R.string.lib_header_wednesday);
+            case Calendar.THURSDAY:
+                return resources.getString(R.string.lib_header_thursday);
+            case Calendar.FRIDAY:
+                return resources.getString(R.string.lib_header_friday);
+            case Calendar.SATURDAY:
+                return resources.getString(R.string.lib_header_saturday);
+            case Calendar.SUNDAY:
+                return resources.getString(R.string.lib_header_sunday);
+            default:
+                // unknown day
+                throw new IllegalArgumentException("dayOfWeek is not valid. Pick a value between 1 and 7. " +
+                        "dayOfWeek: " + dayOfWeek);
+        }
+
     }
 
 
@@ -207,4 +289,6 @@ public class CalendarView extends LinearLayout{
             Log.d("D", "Initializing took: " + time);
         }
     }
+
+
 }
