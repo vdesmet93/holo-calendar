@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 
-public class CalendarView extends LinearLayout{
+public class CalendarView extends LinearLayout implements View.OnClickListener {
 
     private boolean mIsViewInitialized;
 
@@ -24,6 +24,7 @@ public class CalendarView extends LinearLayout{
 
     private int mFirstDayOfWeek;
     private int mLastDayOfWeek;
+    private OnDayClickListener mOnDayClickListener;
 
     public CalendarView(final Context context) {
         this(context, null);
@@ -43,6 +44,11 @@ public class CalendarView extends LinearLayout{
 
     }
 
+    /**
+     * Set the first day of the week that needs to be shown
+     * All days of the week are valid
+     * @param day Day of the week. e.g. Calendar.MONDAY
+     */
     public void setFirstDayOfWeek(final int day) {
         if(day < Calendar.SUNDAY || day > Calendar.SATURDAY) {
             throw new IllegalArgumentException("day must be between " + Calendar.SUNDAY + " and " + Calendar.SATURDAY);
@@ -54,6 +60,13 @@ public class CalendarView extends LinearLayout{
         updateCalendar();
     }
 
+    /**
+     * (Optional) Set the last day of the week that needs to be shown
+     * All days of the week are valid
+     * If not set, it'll pick the day before the first day of the week
+     * Possible implementation: Hide the weekends -> setLastDayOfWeek(Calendar.FRIDAY)
+     * @param day Day of the week. e.g. Calendar.SUNDAY
+     */
     public void setLastDayOfWeek(final int day) {
         if(day < Calendar.SUNDAY || day > Calendar.SATURDAY) {
             throw new IllegalArgumentException("day must be between " + Calendar.SUNDAY + " and " + Calendar.SATURDAY);
@@ -63,10 +76,20 @@ public class CalendarView extends LinearLayout{
 
     }
 
+    /**
+     * Set a DayAdapter
+     * The DayAdapter will be able to change the TextViews of the headers/days
+     * and is able to add Category Colors to days
+     * @param newAdapter
+     */
     public void setDayAdapter(DayAdapter newAdapter) {
         this.mDayAdapter = newAdapter;
     }
 
+    /**
+     * Set the time in millis of the month that will be shown
+     * @param monthInMillis Time in millis of month that will be visible
+     */
     public void setCalendar(long monthInMillis) {
         final Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(monthInMillis);
@@ -77,6 +100,33 @@ public class CalendarView extends LinearLayout{
 
     }
 
+    /**
+     * Set an onDayClick listener, which will be called when the user clicked on a valid Day
+     * @param listener Listener to respond to onClick events
+     */
+    public void setOnDayClickListener(OnDayClickListener listener) {
+        this.mOnDayClickListener = listener;
+    }
+
+    /**
+     * Will be called by the TextView
+     * This method will call the adapter's onDayClick method
+     */
+    @Override
+    public void onClick(final View v) {
+        // user clicked on a TextView
+        if(v != null) {
+            final long timeInMillis =  Long.parseLong(v.getTag().toString());
+            if(mOnDayClickListener != null) {
+                mOnDayClickListener.onDayClick(timeInMillis);
+            }
+        }
+    }
+
+    /**
+     * Updates mFirstDayCalendar, so initView() knows on which day he needs to start
+     * creating the views.
+     */
     private void updateCalendar() {
         // create a new calendar
         final Calendar calendar = Calendar.getInstance();
@@ -104,6 +154,10 @@ public class CalendarView extends LinearLayout{
         this.mCalendarFirstDay = calendar;
     }
 
+    /**
+     * Create the view
+     * Initializes the headers, views for all visible days
+     */
     @SuppressWarnings("ConstantConditions")
     private void initView() {
 
@@ -197,6 +251,9 @@ public class CalendarView extends LinearLayout{
                 }
             }
 
+            // set TextView tag to the timeInMillis for the onClickListener
+            dayTextView.setTag(timeInMillis);
+            dayTextView.setOnClickListener(this);
 
 
             // add layout to view
@@ -221,7 +278,12 @@ public class CalendarView extends LinearLayout{
         mIsViewInitialized = true;
     }
 
+    /**
+     * Create the headers for each (visible) day of the week
+     * Starts at mFirstDayOfWeek, ends at mLastDayOfWeek
+     */
     private void createHeaders() {
+        // initialize variables
         final Context context = getContext();
         final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final Resources resources = context.getResources();
@@ -229,18 +291,24 @@ public class CalendarView extends LinearLayout{
         final int firstDayOfWeek = mFirstDayOfWeek;
         final int lastDayOfWeek = mLastDayOfWeek;
 
+        // inflate the ViewGroup where we'll put all the headers
         final ViewGroup headers = (ViewGroup) inflater.inflate(R.layout.lib_calendar_headers, this, false);
 
         int dayOfWeek = firstDayOfWeek;
 
         do {
+            // initialize variables for this day
             final TextView header = (TextView) inflater.inflate(R.layout.lib_calendar_single_header, headers, false);
-            final String name = getNameForDay(dayOfWeek, resources);
+            final String nameOfDay = getNameForDay(dayOfWeek, resources);
 
+            // allow adapter to update the TextView
+            // e.g. change font, appearance, add click listener on all/some days
             adapter.updateHeaderTextView(header, dayOfWeek);
 
-            header.setText(name);
+            // set the text
+            header.setText(nameOfDay);
 
+            // add TextView to ViewGroup
             headers.addView(header);
 
             // increment dayOfWeek, make sure it's a valid day
@@ -249,10 +317,18 @@ public class CalendarView extends LinearLayout{
 
         } while(dayOfWeek != lastDayOfWeek + 1);
 
+        // add the headers View
         addView(headers);
     }
 
-    private String getNameForDay(final int dayOfWeek, final Resources resources) {
+    /**
+     * Get a human readable name for this day of the week
+     * @param dayOfWeek between Calendar.SUNDAY and Calendar.SATURDAY
+     * @param resources A resources object which can be retrieved by Context.getResources()
+     * @return A name for this day of the week. MON - SUN.
+     * @throws IllegalArgumentException Thrown when provided dayOfWeek is invalid
+     */
+    private String getNameForDay(final int dayOfWeek, final Resources resources) throws IllegalArgumentException {
         switch(dayOfWeek) {
             case Calendar.MONDAY:
                 return resources.getString(R.string.lib_header_monday);

@@ -11,11 +11,12 @@
 
     <TextView
         android:id="@+id/lib_calendar_day_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:textColor="@color/lib_calendar_day_textcolor"
         android:textSize="@dimen/lib_calendar_day_textsize"
-        android:layout_centerInParent="true"/>
+        android:background="@drawable/list_selector_holo_light"
+        android:gravity="center"/>
 
     <LinearLayout
         android:id="@+id/lib_calendar_day_categories"
