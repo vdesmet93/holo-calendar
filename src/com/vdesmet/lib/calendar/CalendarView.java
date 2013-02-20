@@ -27,21 +27,27 @@ public class CalendarView extends LinearLayout implements View.OnClickListener {
     private OnDayClickListener mOnDayClickListener;
 
     public CalendarView(final Context context) {
-        this(context, null);
+        super(context);
+        init();
     }
 
     public CalendarView(final Context context, final AttributeSet attrs) {
-        this(context, attrs, 0);
+        super(context, attrs);
+        init();
     }
 
     public CalendarView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
+        init();
+
+    }
+
+    private void init() {
         setOrientation(VERTICAL);
 
         mIsViewInitialized = false;
         mFirstDayOfWeek = Calendar.MONDAY;
         mLastDayOfWeek = -1;
-
     }
 
     /**
