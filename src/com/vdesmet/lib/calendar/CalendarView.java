@@ -92,6 +92,12 @@ public class CalendarView extends LinearLayout implements View.OnClickListener {
      * @param firstValidDay The first valid day
      */
     public void setFirstValidDay(final Calendar firstValidDay) {
+        // remove all the useless attributes from the calendar
+        firstValidDay.clear(Calendar.HOUR_OF_DAY);
+        firstValidDay.clear(Calendar.MINUTE);
+        firstValidDay.clear(Calendar.SECOND);
+        firstValidDay.clear(Calendar.MILLISECOND);
+
         this.mFirstValidDay = firstValidDay;
     }
 
@@ -101,6 +107,12 @@ public class CalendarView extends LinearLayout implements View.OnClickListener {
      * @param lastValidDay The last valid day
      */
     public void setLastValidDay(final Calendar lastValidDay) {
+        // remove all the useless attributes from the calendar
+        lastValidDay.clear(Calendar.HOUR_OF_DAY);
+        lastValidDay.clear(Calendar.MINUTE);
+        lastValidDay.clear(Calendar.SECOND);
+        lastValidDay.clear(Calendar.MILLISECOND);
+
         this.mLastValidDay = lastValidDay;
     }
 
