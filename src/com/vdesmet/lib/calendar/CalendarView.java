@@ -24,6 +24,10 @@ public class CalendarView extends LinearLayout implements View.OnClickListener {
 
     private int mFirstDayOfWeek;
     private int mLastDayOfWeek;
+
+    private Calendar mFirstValidDay;
+    private Calendar mLastValidDay;
+
     private OnDayClickListener mOnDayClickListener;
 
     public CalendarView(final Context context) {
@@ -83,10 +87,28 @@ public class CalendarView extends LinearLayout implements View.OnClickListener {
     }
 
     /**
+     * (Optional) Set a custom first valid day. If set, all the days before this day will be disabled.
+     * If not set, this will be the first day of the month
+     * @param firstValidDay The first valid day
+     */
+    public void setFirstValidDay(final Calendar firstValidDay) {
+        this.mFirstValidDay = firstValidDay;
+    }
+
+    /**
+     * (Optional) Set a custom last valid day. If set, all the days after this day will be disabled.
+     * If not set, this will be the last day of the month
+     * @param lastValidDay The last valid day
+     */
+    public void setLastValidDay(final Calendar lastValidDay) {
+        this.mLastValidDay = lastValidDay;
+    }
+
+    /**
      * Set a DayAdapter
      * The DayAdapter will be able to change the TextViews of the headers/days
      * and is able to add Category Colors to days
-     * @param newAdapter
+     * @param newAdapter The (new) adapter to be set
      */
     public void setDayAdapter(DayAdapter newAdapter) {
         this.mDayAdapter = newAdapter;
@@ -182,7 +204,9 @@ public class CalendarView extends LinearLayout implements View.OnClickListener {
         final Context context = getContext();
         final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final DayAdapter adapter = mDayAdapter;
-        final Calendar month = mCalendarFirstDay;
+        final Calendar currentDay = mCalendarFirstDay;
+        final Calendar firstValidDay = mFirstValidDay;
+        final Calendar lastValidDay = mLastValidDay;
         final int firstDayOfWeek = mFirstDayOfWeek;
         final int lastDayOfWeek = mLastDayOfWeek;
         final int currentMonth = mCurrentMonth;
@@ -192,10 +216,10 @@ public class CalendarView extends LinearLayout implements View.OnClickListener {
         ViewGroup weekLayout = (ViewGroup) inflater.inflate(R.layout.lib_calendar_week, this, false);
 
         // continue adding days until we've done the day at the end of the week(usually in the next month)
-        while(month.get(Calendar.MONTH) <= currentMonth || month.get(Calendar.DAY_OF_WEEK) != lastDayOfWeek + 1) {
+        while(currentDay.get(Calendar.MONTH) <= currentMonth || currentDay.get(Calendar.DAY_OF_WEEK) != lastDayOfWeek + 1) {
 
             // check if we need to add this day, if not, move to the next
-            final int dayOfWeek = month.get(Calendar.DAY_OF_WEEK);
+            final int dayOfWeek = currentDay.get(Calendar.DAY_OF_WEEK);
             boolean moveToNext = false;
             if(lastDayOfWeek < firstDayOfWeek) {
                 if((dayOfWeek < firstDayOfWeek && dayOfWeek > lastDayOfWeek) ||
@@ -211,12 +235,12 @@ public class CalendarView extends LinearLayout implements View.OnClickListener {
             }
             if(moveToNext) {
                 // move to the next day
-                month.add(Calendar.DAY_OF_WEEK, 1);
+                currentDay.add(Calendar.DAY_OF_WEEK, 1);
                 continue;
 
             }
             // setup variables and layouts for this day
-            final long timeInMillis = month.getTimeInMillis();
+            final long timeInMillis = currentDay.getTimeInMillis();
             final ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.lib_calendar_day, this, false);
             final TextView dayTextView = (TextView) layout.findViewById(R.id.lib_calendar_day_text);
             final ViewGroup categories = (ViewGroup) layout.findViewById(R.id.lib_calendar_day_categories);
@@ -227,11 +251,14 @@ public class CalendarView extends LinearLayout implements View.OnClickListener {
             adapter.updateTextView(dayTextView, timeInMillis);
 
             // set the current day: 1-31
-            final int dayOfMonth = month.get(Calendar.DAY_OF_MONTH);
+            final int dayOfMonth = currentDay.get(Calendar.DAY_OF_MONTH);
             dayTextView.setText(String.valueOf(dayOfMonth));
 
-            // check if we need to disable the view, because it's in another month
-            if(month.get(Calendar.MONTH) != currentMonth) {
+            // check if we need to disable the view, because it's in another month, or
+            // if it's before the first valid day, or after the last valid day
+            if((currentDay.get(Calendar.MONTH) != currentMonth) ||
+               (firstValidDay == null || firstValidDay.before(currentDay)) ||
+               (lastValidDay == null || lastValidDay.after(currentDay))) {
                 // change the appearance if it's disabled
                 layout.setBackgroundColor(dayDisabledBackgroundColor);
                 dayTextView.setTextColor(dayDisabledTextColor);
@@ -273,7 +300,7 @@ public class CalendarView extends LinearLayout implements View.OnClickListener {
             }
 
             // add 1 day
-            month.add(Calendar.DAY_OF_WEEK, 1);
+            currentDay.add(Calendar.DAY_OF_WEEK, 1);
         }
 
         if(weekLayout.getParent() == null) {
