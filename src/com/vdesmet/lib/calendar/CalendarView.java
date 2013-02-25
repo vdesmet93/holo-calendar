@@ -3,7 +3,6 @@ package com.vdesmet.lib.calendar;
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,11 +91,11 @@ public class CalendarView extends LinearLayout implements View.OnClickListener {
      * @param firstValidDay The first valid day
      */
     public void setFirstValidDay(final Calendar firstValidDay) {
-        // remove all the useless attributes from the calendar
-        firstValidDay.clear(Calendar.HOUR_OF_DAY);
-        firstValidDay.clear(Calendar.MINUTE);
-        firstValidDay.clear(Calendar.SECOND);
-        firstValidDay.clear(Calendar.MILLISECOND);
+        // set all the useless attributes to 0
+        firstValidDay.set(Calendar.HOUR_OF_DAY, 0);
+        firstValidDay.set(Calendar.MINUTE, 0);
+        firstValidDay.set(Calendar.SECOND, 0);
+        firstValidDay.set(Calendar.MILLISECOND, 0);
 
         this.mFirstValidDay = firstValidDay;
     }
@@ -107,11 +106,11 @@ public class CalendarView extends LinearLayout implements View.OnClickListener {
      * @param lastValidDay The last valid day
      */
     public void setLastValidDay(final Calendar lastValidDay) {
-        // remove all the useless attributes from the calendar
-        lastValidDay.clear(Calendar.HOUR_OF_DAY);
-        lastValidDay.clear(Calendar.MINUTE);
-        lastValidDay.clear(Calendar.SECOND);
-        lastValidDay.clear(Calendar.MILLISECOND);
+        // set all the useless attributes to 0
+        lastValidDay.set(Calendar.HOUR_OF_DAY, 0);
+        lastValidDay.set(Calendar.MINUTE, 0);
+        lastValidDay.set(Calendar.SECOND, 0);
+        lastValidDay.set(Calendar.MILLISECOND, 0);
 
         this.mLastValidDay = lastValidDay;
     }
@@ -184,11 +183,11 @@ public class CalendarView extends LinearLayout implements View.OnClickListener {
         // withdraw that number from the calendar
         calendar.add(Calendar.DAY_OF_WEEK, -daysTowithdraw);
 
-        // remove all the useless attributes from the calendar
-        calendar.clear(Calendar.HOUR_OF_DAY);
-        calendar.clear(Calendar.MINUTE);
-        calendar.clear(Calendar.SECOND);
-        calendar.clear(Calendar.MILLISECOND);
+        // set all the useless attributes to 0
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
 
         // set calendar
         this.mCalendarFirstDay = calendar;
@@ -269,8 +268,8 @@ public class CalendarView extends LinearLayout implements View.OnClickListener {
             // check if we need to disable the view, because it's in another month, or
             // if it's before the first valid day, or after the last valid day
             if((currentDay.get(Calendar.MONTH) != currentMonth) ||
-               (firstValidDay == null || firstValidDay.before(currentDay)) ||
-               (lastValidDay == null || lastValidDay.after(currentDay))) {
+               (firstValidDay != null && currentDay.before(firstValidDay)) ||
+               (lastValidDay != null && currentDay.after(lastValidDay))) {
                 // change the appearance if it's disabled
                 layout.setBackgroundColor(dayDisabledBackgroundColor);
                 dayTextView.setTextColor(dayDisabledTextColor);
@@ -404,10 +403,7 @@ public class CalendarView extends LinearLayout implements View.OnClickListener {
 
         if(!mIsViewInitialized) {
             // initialize view
-            long time = System.currentTimeMillis();
             initView();
-            time = System.currentTimeMillis() - time;
-            Log.d("D", "Initializing took: " + time);
         }
     }
 
