@@ -1,6 +1,7 @@
 package com.vdesmet.lib.calendar;
 
 import android.content.Context;
+import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
@@ -11,6 +12,8 @@ public class MultiCalendarView extends LinearLayout {
     private boolean mIsViewInitialized;
     private int mFirstDayOfWeek;
     private int mLastDayOfWeek;
+
+    private ViewPager mViewPager;
 
     public MultiCalendarView(final Context context) {
         super(context);
@@ -36,7 +39,8 @@ public class MultiCalendarView extends LinearLayout {
     }
 
     private void initView() {
-
+        final ViewPager viewPager = new ViewPager(getContext());
+        viewPager.setAdapter(new MultiCalendarAdapter());
     }
 
     @Override
