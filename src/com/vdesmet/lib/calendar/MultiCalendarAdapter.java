@@ -4,10 +4,11 @@ import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
+import com.viewpagerindicator.TitleProvider;
 
 import java.util.Calendar;
 
-public class MultiCalendarAdapter extends PagerAdapter{
+public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider{
     private final Context mContext;
     private final MultiCalendarView mCalendarView;
 
@@ -100,4 +101,8 @@ public class MultiCalendarAdapter extends PagerAdapter{
         return view == o;
     }
 
+    @Override
+    public String getTitle(final int position) {
+        return mContext.getString(R.string.lib_month_august) + " 2013";
+    }
 }
