@@ -3,17 +3,15 @@ package com.vdesmet.lib.calendar;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.widget.LinearLayout;
 
 import java.util.Calendar;
 
-public class MultiCalendarView extends LinearLayout {
+public class MultiCalendarView extends AbstractCalendarView {
 
-    private boolean mIsViewInitialized;
-    private int mFirstDayOfWeek;
-    private int mLastDayOfWeek;
+    private int mCount;
 
     private ViewPager mViewPager;
+    private MultiCalendarAdapter mAdapter;
 
     public MultiCalendarView(final Context context) {
         super(context);
@@ -38,19 +36,16 @@ public class MultiCalendarView extends LinearLayout {
         mLastDayOfWeek = -1;
     }
 
-    private void initView() {
-        final ViewPager viewPager = new ViewPager(getContext());
-        viewPager.setAdapter(new MultiCalendarAdapter());
-    }
-
     @Override
-    protected void onLayout(final boolean changed, final int l, final int t, final int r, final int b) {
-        super.onLayout(changed, l, t, r, b);
+    protected void initView() {
+        final ViewPager viewPager = new ViewPager(getContext());
+        final MultiCalendarAdapter adapter = new MultiCalendarAdapter(getContext(), this);
+        viewPager.setAdapter(adapter);
 
-        if(!mIsViewInitialized) {
-            // initialize view
-            initView();
-        }
+        mAdapter = adapter;
+        mViewPager = viewPager;
+
+        addView(viewPager);
     }
 
 }

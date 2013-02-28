@@ -6,28 +6,11 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.Calendar;
 
-public class CalendarView extends LinearLayout implements View.OnClickListener {
-
-    private boolean mIsViewInitialized;
-
-    private DayAdapter mDayAdapter;
-
-    private int mCurrentMonth;
-    private Calendar mCalendar;
-    private Calendar mCalendarFirstDay;
-
-    private int mFirstDayOfWeek;
-    private int mLastDayOfWeek;
-
-    private Calendar mFirstValidDay;
-    private Calendar mLastValidDay;
-
-    private OnDayClickListener mOnDayClickListener;
+public class CalendarView extends AbstractCalendarView implements View.OnClickListener {
 
     public CalendarView(final Context context) {
         super(context);
@@ -47,104 +30,9 @@ public class CalendarView extends LinearLayout implements View.OnClickListener {
 
     private void init() {
         setOrientation(VERTICAL);
-
         mIsViewInitialized = false;
         mFirstDayOfWeek = Calendar.MONDAY;
         mLastDayOfWeek = -1;
-    }
-
-    /**
-     * Set the first day of the week that needs to be shown
-     * All days of the week are valid
-     * @param day Day of the week. e.g. Calendar.MONDAY
-     */
-    public void setFirstDayOfWeek(final int day) {
-        if(day < Calendar.SUNDAY || day > Calendar.SATURDAY) {
-            throw new IllegalArgumentException("day must be between " + Calendar.SUNDAY + " and " + Calendar.SATURDAY);
-        }
-
-        mFirstDayOfWeek = day;
-
-        // update calendar
-        updateCalendar();
-    }
-
-    /**
-     * (Optional) Set the last day of the week that needs to be shown
-     * All days of the week are valid
-     * If not set, it'll pick the day before the first day of the week
-     * Possible implementation: Hide the weekends -> setLastDayOfWeek(Calendar.FRIDAY)
-     * @param day Day of the week. e.g. Calendar.SUNDAY
-     */
-    public void setLastDayOfWeek(final int day) {
-        if(day < Calendar.SUNDAY || day > Calendar.SATURDAY) {
-            throw new IllegalArgumentException("day must be between " + Calendar.SUNDAY + " and " + Calendar.SATURDAY);
-        }
-
-        mLastDayOfWeek = day;
-
-    }
-
-    /**
-     * (Optional) Set a custom first valid day. If set, all the days before this day will be disabled.
-     * If not set, this will be the first day of the month
-     * @param firstValidDay The first valid day
-     */
-    public void setFirstValidDay(final Calendar firstValidDay) {
-        // set all the useless attributes to 0
-        firstValidDay.set(Calendar.HOUR_OF_DAY, 0);
-        firstValidDay.set(Calendar.MINUTE, 0);
-        firstValidDay.set(Calendar.SECOND, 0);
-        firstValidDay.set(Calendar.MILLISECOND, 0);
-
-        this.mFirstValidDay = firstValidDay;
-    }
-
-    /**
-     * (Optional) Set a custom last valid day. If set, all the days after this day will be disabled.
-     * If not set, this will be the last day of the month
-     * @param lastValidDay The last valid day
-     */
-    public void setLastValidDay(final Calendar lastValidDay) {
-        // set all the useless attributes to 0
-        lastValidDay.set(Calendar.HOUR_OF_DAY, 0);
-        lastValidDay.set(Calendar.MINUTE, 0);
-        lastValidDay.set(Calendar.SECOND, 0);
-        lastValidDay.set(Calendar.MILLISECOND, 0);
-
-        this.mLastValidDay = lastValidDay;
-    }
-
-    /**
-     * Set a DayAdapter
-     * The DayAdapter will be able to change the TextViews of the headers/days
-     * and is able to add Category Colors to days
-     * @param newAdapter The (new) adapter to be set
-     */
-    public void setDayAdapter(DayAdapter newAdapter) {
-        this.mDayAdapter = newAdapter;
-    }
-
-    /**
-     * Set the time in millis of the month that will be shown
-     * @param monthInMillis Time in millis of month that will be visible
-     */
-    public void setCalendar(long monthInMillis) {
-        final Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(monthInMillis);
-
-        this.mCurrentMonth = calendar.get(Calendar.MONTH);
-        this.mCalendar = calendar;
-        updateCalendar();
-
-    }
-
-    /**
-     * Set an onDayClick listener, which will be called when the user clicked on a valid Day
-     * @param listener Listener to respond to onClick events
-     */
-    public void setOnDayClickListener(OnDayClickListener listener) {
-        this.mOnDayClickListener = listener;
     }
 
     /**
@@ -163,43 +51,12 @@ public class CalendarView extends LinearLayout implements View.OnClickListener {
     }
 
     /**
-     * Updates mFirstDayCalendar, so initView() knows on which day he needs to start
-     * creating the views.
-     */
-    private void updateCalendar() {
-        // create a new calendar
-        final Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(mCalendar.getTimeInMillis());
-
-        // change calendar to first day of month
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-
-        // change day to firstDayOfWeek
-        final int calendarDay = calendar.get(Calendar.DAY_OF_WEEK);
-
-        // get the number of days we need to remove from the calendar, to start the calendar at mFirstDayOfWeek;
-        final int daysTowithdraw = calendarDay - mFirstDayOfWeek;
-
-        // withdraw that number from the calendar
-        calendar.add(Calendar.DAY_OF_WEEK, -daysTowithdraw);
-
-        // set all the useless attributes to 0
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-
-        // set calendar
-        this.mCalendarFirstDay = calendar;
-    }
-
-    /**
      * Create the view
      * Initializes the headers, views for all visible days
      */
     @SuppressWarnings("ConstantConditions")
-    private void initView() {
-
+    @Override
+    protected void initView() {
         // if no custom lastDayOfWeek was set, change it to the day before the first day so we show all 7 days
         if(mLastDayOfWeek == -1) {
             mLastDayOfWeek = mFirstDayOfWeek - 1;
@@ -337,7 +194,6 @@ public class CalendarView extends LinearLayout implements View.OnClickListener {
 
         // inflate the ViewGroup where we'll put all the headers
         final ViewGroup headers = (ViewGroup) inflater.inflate(R.layout.lib_calendar_headers, this, false);
-
         int dayOfWeek = firstDayOfWeek;
 
         do {
@@ -364,48 +220,4 @@ public class CalendarView extends LinearLayout implements View.OnClickListener {
         // add the headers View
         addView(headers);
     }
-
-    /**
-     * Get a human readable name for this day of the week
-     * @param dayOfWeek between Calendar.SUNDAY and Calendar.SATURDAY
-     * @param resources A resources object which can be retrieved by Context.getResources()
-     * @return A name for this day of the week. MON - SUN.
-     * @throws IllegalArgumentException Thrown when provided dayOfWeek is invalid
-     */
-    private String getNameForDay(final int dayOfWeek, final Resources resources) throws IllegalArgumentException {
-        switch(dayOfWeek) {
-            case Calendar.MONDAY:
-                return resources.getString(R.string.lib_header_monday);
-            case Calendar.TUESDAY:
-                return resources.getString(R.string.lib_header_tuesday);
-            case Calendar.WEDNESDAY:
-                return resources.getString(R.string.lib_header_wednesday);
-            case Calendar.THURSDAY:
-                return resources.getString(R.string.lib_header_thursday);
-            case Calendar.FRIDAY:
-                return resources.getString(R.string.lib_header_friday);
-            case Calendar.SATURDAY:
-                return resources.getString(R.string.lib_header_saturday);
-            case Calendar.SUNDAY:
-                return resources.getString(R.string.lib_header_sunday);
-            default:
-                // unknown day
-                throw new IllegalArgumentException("dayOfWeek is not valid. Pick a value between 1 and 7. " +
-                        "dayOfWeek: " + dayOfWeek);
-        }
-
-    }
-
-
-    @Override
-    protected void onLayout(final boolean changed, final int l, final int t, final int r, final int b) {
-        super.onLayout(changed, l, t, r, b);
-
-        if(!mIsViewInitialized) {
-            // initialize view
-            initView();
-        }
-    }
-
-
 }
