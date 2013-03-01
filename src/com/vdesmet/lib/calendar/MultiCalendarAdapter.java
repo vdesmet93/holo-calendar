@@ -113,7 +113,8 @@ public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider{
     @Override
     public String getTitle(final int position) {
         final Context context = mContext;
-        final Calendar date = mCalendarView.getFirstValidDay();
+        final Calendar date = Calendar.getInstance();
+        date.setTimeInMillis((mCalendarView.getFirstValidDay().getTimeInMillis()));
         date.add(Calendar.MONTH, position);
 
         final String month;
