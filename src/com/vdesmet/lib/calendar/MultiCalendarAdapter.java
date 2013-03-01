@@ -104,8 +104,59 @@ public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider{
         return view == o;
     }
 
+
+    /**
+     * Get the title for the current position
+     * @param position - The position in the ViewPager
+     * @return Title: MONTH YEAR -> MARCH 2013
+     */
     @Override
     public String getTitle(final int position) {
-        return mContext.getString(R.string.lib_month_august) + " 2013";
+        final Context context = mContext;
+        final Calendar date = mCalendarView.getFirstValidDay();
+        date.add(Calendar.MONTH, position);
+
+        final String month;
+        switch(position + mCalendarView.getCurrentMont()) {
+            case Calendar.JANUARY:
+                month = context.getString(R.string.lib_month_january);
+                break;
+            case Calendar.FEBRUARY:
+                month = context.getString(R.string.lib_month_february);
+                break;
+            case Calendar.MARCH:
+                month = context.getString(R.string.lib_month_march);
+                break;
+            case Calendar.APRIL:
+                month = context.getString(R.string.lib_month_april);
+                break;
+            case Calendar.MAY:
+                month = context.getString(R.string.lib_month_may);
+                break;
+            case Calendar.JUNE:
+                month = context.getString(R.string.lib_month_june);
+                break;
+            case Calendar.JULY:
+                month = context.getString(R.string.lib_month_july);
+                break;
+            case Calendar.AUGUST:
+                month = context.getString(R.string.lib_month_august);
+                break;
+            case Calendar.SEPTEMBER:
+                month = context.getString(R.string.lib_month_september);
+                break;
+            case Calendar.OCTOBER:
+                month = context.getString(R.string.lib_month_october);
+                break;
+            case Calendar.NOVEMBER:
+                month = context.getString(R.string.lib_month_november);
+                break;
+            default:
+            case Calendar.DECEMBER:
+                month = context.getString(R.string.lib_month_december);
+                break;
+         }
+
+        return month + " " + date.get(Calendar.YEAR);
     }
 }
