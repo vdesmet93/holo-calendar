@@ -32,7 +32,10 @@ public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider{
         final int years = lastDay.get(Calendar.YEAR) - firstDay.get(Calendar.YEAR);
         final int months = lastDay.get(Calendar.MONTH) - firstDay.get(Calendar.MONTH);
 
-        return (years * 12 ) + months;
+        final int diffMonths =  (years * 12 ) + months;
+
+        // January - February is 1 month later, but we have 2 months to show
+        return diffMonths + 1;
 
     }
 
