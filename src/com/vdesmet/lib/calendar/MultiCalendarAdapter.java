@@ -118,7 +118,7 @@ public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider{
         date.add(Calendar.MONTH, position);
 
         final String month;
-        switch(position + mCalendarView.getCurrentMont()) {
+        switch(position + mCalendarView.getCurrentMonth()) {
             case Calendar.JANUARY:
                 month = context.getString(R.string.lib_month_january);
                 break;

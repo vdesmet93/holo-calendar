@@ -22,7 +22,6 @@ public abstract class AbstractCalendarView extends LinearLayout {
     protected Calendar mLastValidDay;
 
     protected OnDayClickListener mOnDayClickListener;
-    private int mCurrentMont;
 
     public AbstractCalendarView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
@@ -235,7 +234,7 @@ public abstract class AbstractCalendarView extends LinearLayout {
         return mOnDayClickListener;
     }
 
-    public int getCurrentMont() {
-        return mCurrentMont;
+    public int getCurrentMonth() {
+        return mCurrentMonth;
     }
 }
