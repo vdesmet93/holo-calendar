@@ -9,11 +9,7 @@ import java.util.Calendar;
 
 public class MultiCalendarView extends AbstractCalendarView {
 
-    private int mCount;
     private boolean mShowIndicator;
-
-    private ViewPager mViewPager;
-    private MultiCalendarAdapter mAdapter;
 
     public MultiCalendarView(final Context context) {
         super(context);
@@ -45,23 +41,24 @@ public class MultiCalendarView extends AbstractCalendarView {
 
     @Override
     protected void initView() {
-        final ViewPager viewPager = new ViewPager(getContext());
-        final MultiCalendarAdapter adapter = new MultiCalendarAdapter(getContext(), this);
-        viewPager.setAdapter(adapter);
+        if(mFirstValidDay != null) {
+            final ViewPager viewPager = new ViewPager(getContext());
+            final MultiCalendarAdapter adapter = new MultiCalendarAdapter(getContext(), this);
+            adapter.setTypeface(mTypeface);
+            viewPager.setAdapter(adapter);
 
-        if(mShowIndicator) {
-            TitlePageIndicator indicator = new TitlePageIndicator(getContext());
-            indicator.setViewPager(viewPager);
-            if(mTypeface != null) {
-                indicator.setTypeface(mTypeface);
+            if(mShowIndicator) {
+                TitlePageIndicator indicator = new TitlePageIndicator(getContext());
+                indicator.setViewPager(viewPager);
+                if(mTypeface != null) {
+                    indicator.setTypeface(mTypeface);
+                }
+                addView(indicator);
             }
-            addView(indicator);
+
+            addView(viewPager);
+
+            mIsViewInitialized = true;
         }
-
-        mAdapter = adapter;
-        mViewPager = viewPager;
-
-        addView(viewPager);
     }
-
 }

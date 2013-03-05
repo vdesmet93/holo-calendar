@@ -1,6 +1,7 @@
 package com.vdesmet.lib.calendar;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,7 @@ import java.util.Calendar;
 public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider{
     private final Context mContext;
     private final MultiCalendarView mCalendarView;
-
+    private Typeface mTypeface;
 
     public MultiCalendarAdapter(final Context context, final MultiCalendarView calendarView) {
         super();
@@ -57,6 +58,7 @@ public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider{
         final OnDayClickListener onDayClickListener = multiCalendarView.getOnDayClickListener();
         final int firstDayOfWeek = multiCalendarView.getFirstDayOfWeek();
         final int lastDayOfWeek = multiCalendarView.getLastDayOfWeek();
+        final Typeface typeface = mTypeface;
 
         // create first day of the monthView
         final Calendar firstMonthDay = Calendar.getInstance();
@@ -66,7 +68,6 @@ public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider{
             firstMonthDay.set(Calendar.DAY_OF_MONTH, 1);
         }
 
-
         // create and configure the view
         final CalendarView monthView = new CalendarView(context);
         monthView.setFirstValidDay(firstMonthDay);
@@ -75,7 +76,8 @@ public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider{
             // the last day is in this month
             monthView.setLastValidDay(lastDay);
         }
-
+        // set typeface
+        monthView.setTypeface(typeface);
 
         // add adapter and onClickListener
         monthView.setOnDayClickListener(onDayClickListener);
@@ -159,5 +161,9 @@ public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider{
          }
 
         return month + " " + date.get(Calendar.YEAR);
+    }
+
+    public void setTypeface(final Typeface typeface) {
+        this.mTypeface = typeface;
     }
 }
