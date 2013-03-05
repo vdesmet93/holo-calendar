@@ -2,6 +2,7 @@ package com.vdesmet.lib.calendar;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
@@ -22,6 +23,8 @@ public abstract class AbstractCalendarView extends LinearLayout {
     protected Calendar mLastValidDay;
 
     protected OnDayClickListener mOnDayClickListener;
+
+    protected Typeface mTypeface;
 
     public AbstractCalendarView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
@@ -111,6 +114,14 @@ public abstract class AbstractCalendarView extends LinearLayout {
      */
     public void setDayAdapter(DayAdapter newAdapter) {
         this.mDayAdapter = newAdapter;
+    }
+
+    /**
+     * Set a custom Typeface for the days and headers(1-31 and Mon-Sun)
+     * @param newTypeFace The new Typeface which will be used
+     */
+    public void setTypeface(final Typeface newTypeFace) {
+        this.mTypeface = newTypeFace;
     }
 
     /**

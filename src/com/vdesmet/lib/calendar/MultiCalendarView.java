@@ -10,6 +10,7 @@ import java.util.Calendar;
 public class MultiCalendarView extends AbstractCalendarView {
 
     private int mCount;
+    private boolean mShowIndicator;
 
     private ViewPager mViewPager;
     private MultiCalendarAdapter mAdapter;
@@ -32,9 +33,14 @@ public class MultiCalendarView extends AbstractCalendarView {
     private void init() {
         setOrientation(VERTICAL);
 
+        mShowIndicator = true;
         mIsViewInitialized = false;
         mFirstDayOfWeek = Calendar.MONDAY;
         mLastDayOfWeek = -1;
+    }
+
+    public void setIndicatorVisible(boolean visible) {
+       this.mShowIndicator = visible;
     }
 
     @Override
@@ -43,9 +49,14 @@ public class MultiCalendarView extends AbstractCalendarView {
         final MultiCalendarAdapter adapter = new MultiCalendarAdapter(getContext(), this);
         viewPager.setAdapter(adapter);
 
-        TitlePageIndicator indicator = new TitlePageIndicator(getContext());
-        indicator.setViewPager(viewPager);
-        addView(indicator);
+        if(mShowIndicator) {
+            TitlePageIndicator indicator = new TitlePageIndicator(getContext());
+            indicator.setViewPager(viewPager);
+            if(mTypeface != null) {
+                indicator.setTypeface(mTypeface);
+            }
+            addView(indicator);
+        }
 
         mAdapter = adapter;
         mViewPager = viewPager;

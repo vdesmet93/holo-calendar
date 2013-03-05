@@ -2,6 +2,7 @@ package com.vdesmet.lib.calendar;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import java.util.Calendar;
 
 public class CalendarView extends AbstractCalendarView implements View.OnClickListener {
+
 
     public CalendarView(final Context context) {
         super(context);
@@ -80,6 +82,7 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
         final int currentMonth = mCurrentMonth;
         final int dayDisabledBackgroundColor = getResources().getColor(R.color.lib_calendar_day_background_disabled);
         final int dayDisabledTextColor = getResources().getColor(R.color.lib_calendar_day_textcolor_disabled);
+        final Typeface typeface = mTypeface;
 
         ViewGroup weekLayout = (ViewGroup) inflater.inflate(R.layout.lib_calendar_week, this, false);
 
@@ -113,10 +116,10 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
             final TextView dayTextView = (TextView) layout.findViewById(R.id.lib_calendar_day_text);
             final ViewGroup categories = (ViewGroup) layout.findViewById(R.id.lib_calendar_day_categories);
 
-
-            // allow the adapter to update the TextView
-            // e.g. change TypeFace, font size, color based on the time
-            adapter.updateTextView(dayTextView, timeInMillis);
+            // if set, use the custom Typeface
+            if(typeface != null) {
+                dayTextView.setTypeface(typeface);
+            }
 
             // set the current day: 1-31
             final int dayOfMonth = currentDay.get(Calendar.DAY_OF_MONTH);
@@ -135,6 +138,10 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
                 layout.setEnabled(false);
             }
             else {
+                // allow the adapter to update the TextView
+                // e.g. change TypeFace, font size, color based on the time
+                adapter.updateTextView(dayTextView, timeInMillis);
+
                 // create a new view for each category
                 final int[] colors = adapter.getCategoryColors(timeInMillis);
                 if(colors != null) {
@@ -191,6 +198,7 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
         final DayAdapter adapter = mDayAdapter;
         final int firstDayOfWeek = mFirstDayOfWeek;
         final int lastDayOfWeek = mLastDayOfWeek;
+        final Typeface typeface = mTypeface;
 
         // inflate the ViewGroup where we'll put all the headers
         final ViewGroup headers = (ViewGroup) inflater.inflate(R.layout.lib_calendar_headers, this, false);
@@ -200,6 +208,11 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
             // initialize variables for this day
             final TextView header = (TextView) inflater.inflate(R.layout.lib_calendar_single_header, headers, false);
             final String nameOfDay = getNameForDay(dayOfWeek, resources);
+
+            // if set, use the custom Typeface
+            if(typeface != null) {
+                header.setTypeface(typeface);
+            }
 
             // allow adapter to update the TextView
             // e.g. change font, appearance, add click listener on all/some days
