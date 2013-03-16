@@ -125,9 +125,11 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
             final int dayOfMonth = currentDay.get(Calendar.DAY_OF_MONTH);
             dayTextView.setText(String.valueOf(dayOfMonth));
 
-            // check if we need to disable the view, because it's in another month, or
-            // if it's before the first valid day, or after the last valid day
-            if((currentDay.get(Calendar.MONTH) != currentMonth) ||
+            // check if we need to disable the view
+            //because it's in another month, or if it's before the first valid day, or after the last valid day
+            // or if the adapter says it should be disabled
+            if( !adapter.isDayEnabled(timeInMillis) ||
+                    (currentDay.get(Calendar.MONTH) != currentMonth) ||
                (firstValidDay != null && currentDay.before(firstValidDay)) ||
                (lastValidDay != null && currentDay.after(lastValidDay))) {
                 // change the appearance if it's disabled

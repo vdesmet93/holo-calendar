@@ -40,7 +40,7 @@ public class MultiCalendarView extends AbstractCalendarView {
     }
 
     @Override
-    protected void initView() {
+    public void initView() {
         if(mFirstValidDay != null) {
             final ViewPager viewPager = new ViewPager(getContext());
             final MultiCalendarAdapter adapter = new MultiCalendarAdapter(getContext(), this);
