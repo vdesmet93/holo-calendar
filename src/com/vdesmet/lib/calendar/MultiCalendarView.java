@@ -10,6 +10,9 @@ import java.util.Calendar;
 public class MultiCalendarView extends AbstractCalendarView {
 
     private boolean mShowIndicator;
+    private ViewPager mViewPager;
+    private ViewPager.OnPageChangeListener mOnPageChangeListener;
+    private MultiCalendarAdapter mAdapter;
 
     public MultiCalendarView(final Context context) {
         super(context);
@@ -39,6 +42,15 @@ public class MultiCalendarView extends AbstractCalendarView {
        this.mShowIndicator = visible;
     }
 
+    public void notifyDataSetChanged() {
+        if(mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+    public ViewPager getViewPager() {
+        return  mViewPager;
+    }
+
     @Override
     public void initView() {
         if(mFirstValidDay != null) {
@@ -55,10 +67,23 @@ public class MultiCalendarView extends AbstractCalendarView {
                 }
                 addView(indicator);
             }
+            if(mOnPageChangeListener != null) {
+                viewPager.setOnPageChangeListener(mOnPageChangeListener);
+            }
+
 
             addView(viewPager);
 
+            mViewPager = viewPager;
+            mAdapter = adapter;
             mIsViewInitialized = true;
         }
+    }
+
+    public void setOnPageChangeListener(final ViewPager.OnPageChangeListener onPageChangeListener) {
+        if(mViewPager != null) {
+            mViewPager.setOnPageChangeListener(onPageChangeListener);
+        }
+        mOnPageChangeListener = onPageChangeListener;
     }
 }

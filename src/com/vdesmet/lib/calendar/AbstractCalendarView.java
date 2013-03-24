@@ -198,13 +198,6 @@ public abstract class AbstractCalendarView extends LinearLayout {
         }
 
     }
-            /**
-    @Override
-    public void invalidate() {
-//        initView();
-
-        super.invalidate();
-    } **/
 
     @Override
     protected void onLayout(final boolean changed, final int l, final int t, final int r, final int b) {
