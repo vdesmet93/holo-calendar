@@ -1,8 +1,10 @@
 package com.vdesmet.lib.calendar;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
@@ -26,6 +28,7 @@ public abstract class AbstractCalendarView extends LinearLayout {
 
     protected Typeface mTypeface;
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public AbstractCalendarView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
     }

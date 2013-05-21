@@ -22,6 +22,4 @@
     <string name="lib_month_october">OCTOBER</string>
     <string name="lib_month_november">NOVEMBER</string>
     <string name="lib_month_december">DECEMBER</string>
-    <string name="day_schedule">Dagrooster</string>
-    <string name="month_schedule">Maandrooster</string>
 </resources>

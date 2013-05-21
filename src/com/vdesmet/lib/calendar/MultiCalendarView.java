@@ -54,6 +54,7 @@ public class MultiCalendarView extends AbstractCalendarView {
     @Override
     public void initView() {
         if(mFirstValidDay != null) {
+            removeAllViews();
             final ViewPager viewPager = new ViewPager(getContext());
             final MultiCalendarAdapter adapter = new MultiCalendarAdapter(getContext(), this);
             adapter.setTypeface(mTypeface);
