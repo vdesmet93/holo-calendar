@@ -27,3 +27,4 @@ target/
 
 #Gradle folder
 .gradle/
+build/
