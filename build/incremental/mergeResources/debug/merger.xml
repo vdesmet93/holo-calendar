@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger>
+
+    <dataSet config="main" >
+        <source path="/home/vincent/source/avansRooster/subModules/Calendar/src/main/res" >
+            <file
+                name="list_focused_holo"
+                path="/home/vincent/source/avansRooster/subModules/Calendar/src/main/res/drawable-xhdpi/list_focused_holo.9.png"
+                qualifiers="xhdpi"
+                type="drawable" />
+            <file
+                name="ic_launcher"
+                path="/home/vincent/source/avansRooster/subModules/Calendar/src/main/res/drawable-xhdpi/ic_launcher.png"
+                qualifiers="xhdpi"
+                type="drawable" />
+            <file
+                name="list_longpressed_holo"
+                path="/home/vincent/source/avansRooster/subModules/Calendar/src/main/res/drawable-xhdpi/list_longpressed_holo.9.png"
+                qualifiers="xhdpi"
+                type="drawable" />
+            <file
+                name="list_selector_disabled_holo_light"
+                path="/home/vincent/source/avansRooster/subModules/Calendar/src/main/res/drawable-xhdpi/list_selector_disabled_holo_light.9.png"
+                qualifiers="xhdpi"
+                type="drawable" />
+            <file
+                name="list_pressed_holo_light"
+                path="/home/vincent/source/avansRooster/subModules/Calendar/src/main/res/drawable-xhdpi/list_pressed_holo_light.9.png"
+                qualifiers="xhdpi"
+                type="drawable" />
+            <file
+                name="lib_calendar_week"
+                path="/home/vincent/source/avansRooster/subModules/Calendar/src/main/res/layout/lib_calendar_week.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="lib_calendar_category"
+                path="/home/vincent/source/avansRooster/subModules/Calendar/src/main/res/layout/lib_calendar_category.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="lib_calendar_headers"
+                path="/home/vincent/source/avansRooster/subModules/Calendar/src/main/res/layout/lib_calendar_headers.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="lib_calendar_day"
+                path="/home/vincent/source/avansRooster/subModules/Calendar/src/main/res/layout/lib_calendar_day.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="lib_calendar_single_header"
+                path="/home/vincent/source/avansRooster/subModules/Calendar/src/main/res/layout/lib_calendar_single_header.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="ic_launcher"
+                path="/home/vincent/source/avansRooster/subModules/Calendar/src/main/res/drawable-ldpi/ic_launcher.png"
+                qualifiers="ldpi"
+                type="drawable" />
+            <file
+                path="/home/vincent/source/avansRooster/subModules/Calendar/src/main/res/values/dimens.xml"
+                qualifiers="" >
+                <dimen name="lib_calendar_day_textsize" >22dp
+                </dimen>
+                <dimen name="lib_default_title_indicator_footer_padding" >7dp
+                </dimen>
+                <dimen name="lib_default_title_indicator_clip_padding" >4dp
+                </dimen>
+                <dimen name="lib_category_view_padding_startend" >5dp
+                </dimen>
+                <dimen name="lib_default_title_indicator_footer_indicator_height" >4dp
+                </dimen>
+                <dimen name="lib_default_title_indicator_top_padding" >7dp
+                </dimen>
+                <dimen name="lib_default_title_indicator_text_size" >15dp
+                </dimen>
+                <dimen name="lib_category_padding_sides" >1.5dp
+                </dimen>
+                <dimen name="lib_calendar_day_size" >44dp
+                </dimen>
+                <dimen name="lib_default_title_indicator_footer_indicator_underline_padding" >20dp
+                </dimen>
+                <dimen name="lib_category_padding_bottom" >4dp
+                </dimen>
+                <dimen name="lib_category_size" >4dp
+                </dimen>
+                <dimen name="lib_calendar_day_padding_sides" >2dp
+                </dimen>
+                <dimen name="lib_default_title_indicator_title_padding" >5dp
+                </dimen>
+            </file>
+            <file
+                path="/home/vincent/source/avansRooster/subModules/Calendar/src/main/res/values/com_crashlytics_export_strings.xml"
+                qualifiers="" >
+                <string name="com.crashlytics.android.build_id" >6afab799-28c0-4a8a-ba26-10d548ab9782
+                </string>
+            </file>
+            <file
+                path="/home/vincent/source/avansRooster/subModules/Calendar/src/main/res/values/strings.xml"
+                qualifiers="" >
+                <string name="lib_month_december" >DECEMBER
+                </string>
+                <string name="lib_month_february" >FEBRUARY
+                </string>
+                <string name="lib_month_may" >MAY
+                </string>
+                <string name="lib_header_sunday" >SUN
+                </string>
+                <string name="lib_month_november" >NOVEMBER
+                </string>
+                <string name="lib_month_august" >AUGUST
+                </string>
+                <string name="lib_month_june" >JUNE
+                </string>
+                <string name="lib_month_march" >MARCH
+                </string>
+                <string name="lib_header_saturday" >SAT
+                </string>
+                <string name="lib_header_thursday" >THU
+                </string>
+                <string name="lib_month_october" >OCTOBER
+                </string>
+                <string name="lib_month_september" >SEPTEMBER
+                </string>
+                <string name="lib_month_july" >JULY
+                </string>
+                <string name="lib_header_tuesday" >TUE
+                </string>
+                <string name="lib_month_april" >APRIL
+                </string>
+                <string name="lib_header_wednesday" >WED
+                </string>
+                <string name="lib_month_january" >JANUARY
+                </string>
+                <string name="lib_header_monday" >MON
+                </string>
+                <string name="lib_header_friday" >FRI
+                </string>
+            </file>
+            <file
+                path="/home/vincent/source/avansRooster/subModules/Calendar/src/main/res/values/colors.xml"
+                qualifiers="" >
+                <color name="lib_calendar_day_textcolor" >#686868
+                </color>
+                <color name="lib_calendar_day_textcolor_disabled" >#cbcbcb
+                </color>
+                <color name="lib_calendar_day_background" >@android:color/white
+                </color>
+                <color name="lib_calendar_background" >#e5e5e5
+                </color>
+                <color name="lib_calendar_day_background_disabled" >#f2f2f2
+                </color>
+            </file>
+            <file
+                name="ic_launcher"
+                path="/home/vincent/source/avansRooster/subModules/Calendar/src/main/res/drawable-hdpi/ic_launcher.png"
+                qualifiers="hdpi"
+                type="drawable" />
+            <file
+                path="/home/vincent/source/avansRooster/subModules/Calendar/src/main/res/values-small/dimens.xml"
+                qualifiers="small" >
+                <dimen name="lib_calendar_day_size" >40dp
+                </dimen>
+            </file>
+            <file
+                name="list_selector_background_transition_holo_light"
+                path="/home/vincent/source/avansRooster/subModules/Calendar/src/main/res/drawable/list_selector_background_transition_holo_light.xml"
+                qualifiers=""
+                type="drawable" />
+            <file
+                name="list_selector_holo_light"
+                path="/home/vincent/source/avansRooster/subModules/Calendar/src/main/res/drawable/list_selector_holo_light.xml"
+                qualifiers=""
+                type="drawable" />
+            <file
+                name="ic_launcher"
+                path="/home/vincent/source/avansRooster/subModules/Calendar/src/main/res/drawable-mdpi/ic_launcher.png"
+                qualifiers="mdpi"
+                type="drawable" />
+        </source>
+        <source path="/home/vincent/source/avansRooster/subModules/Calendar/build/res/rs/debug" />
+    </dataSet>
+    <dataSet config="debug" >
+        <source path="/home/vincent/source/avansRooster/subModules/Calendar/src/debug/res" />
+    </dataSet>
+
+</merger>

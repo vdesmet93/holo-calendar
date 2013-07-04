@@ -2,6 +2,9 @@
 *.apk
 *.ap_
 
+#Git
+.git
+
 # files for the dex VM
 *.dex
 
@@ -21,3 +24,6 @@ gen/
 target/
 # eclipse settings
 .settings/
+
+#Gradle folder
+.gradle/
