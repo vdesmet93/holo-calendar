@@ -207,12 +207,12 @@ public abstract class AbstractCalendarView extends LinearLayout {
 
         if(!mIsViewInitialized) {
             // initialize view
-            initView();
+            initView(r - l);
         }
         super.onLayout(changed, l, t, r, b);
     }
 
-    protected abstract void initView();
+    protected abstract void initView(final int width);
 
     /** Getter methods */
     public int getFirstDayOfWeek() {
@@ -242,4 +242,20 @@ public abstract class AbstractCalendarView extends LinearLayout {
     public int getCurrentMonth() {
         return mCurrentMonth;
     }
+
+    public int getDaysInRow() {
+        int firstDayOfWeek = mFirstDayOfWeek;
+        int daysInRow = 1;
+        while(firstDayOfWeek != mLastDayOfWeek) {
+            // Go to the next day in the week
+            firstDayOfWeek = firstDayOfWeek % 7;
+            firstDayOfWeek++;
+
+            // Add another day
+            daysInRow++;
+        }
+
+        return daysInRow;
+    }
+
 }

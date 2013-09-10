@@ -52,7 +52,7 @@ public class MultiCalendarView extends AbstractCalendarView {
     }
 
     @Override
-    public void initView() {
+    public void initView(final int width) {
         if(mFirstValidDay != null) {
             removeAllViews();
             final ViewPager viewPager = new ViewPager(getContext());

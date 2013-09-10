@@ -88,7 +88,7 @@ public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider{
         monthView.setLastDayOfWeek(lastDayOfWeek);
 
         // FIXME Should be called automatically
-        monthView.initView();
+        monthView.initView(mCalendarView.getMeasuredWidth());
 
         // return view
         container.addView(monthView);

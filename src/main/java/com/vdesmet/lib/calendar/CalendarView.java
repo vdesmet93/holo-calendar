@@ -4,15 +4,20 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.lang.Object;
 import java.util.Calendar;
 
 public class CalendarView extends AbstractCalendarView implements View.OnClickListener {
-
+    private static final int PADDING_COUNT = 14;
 
     public CalendarView(final Context context) {
         super(context);
@@ -35,6 +40,15 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
         mIsViewInitialized = false;
         mFirstDayOfWeek = Calendar.MONDAY;
         mLastDayOfWeek = -1;
+
+        // Update day width if we have usable values
+        getViewTreeObserver().
+        addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                updateDayWidth();
+            }
+        });
     }
 
     /**
@@ -58,7 +72,7 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
      */
     @SuppressWarnings("ConstantConditions")
     @Override
-    protected void initView() {
+    protected void initView(final int width) {
         // if no custom lastDayOfWeek was set, change it to the day before the first day so we show all 7 days
         if(mLastDayOfWeek == -1) {
             mLastDayOfWeek = mFirstDayOfWeek - 1;
@@ -184,6 +198,8 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
             addView(weekLayout);
         }
 
+        // Update the day widths
+        updateDayWidth();
 
         mIsViewInitialized = true;
     }
@@ -234,5 +250,65 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
 
         // add the headers View
         addView(headers);
+    }
+
+
+
+    private int getAvailableDayWidth() {
+        // Calculate the available width for a single day-item
+        final int paddingSides = getResources()
+                .getDimensionPixelSize(R.dimen.lib_calendar_day_padding_sides);
+        final int screenWidth = getWidth();
+        final int availableWidth = screenWidth - (paddingSides * PADDING_COUNT);
+        final int daysInRow = getDaysInRow();
+        final int widthPerTile = availableWidth / daysInRow;
+        final int maxWidthPerTile =
+                getResources().getDimensionPixelSize(R.dimen.lib_calendar_day_size);
+
+        // The maximum size of a tile(e.g. a single day)
+        // This is either R.dimen.lib_calendar_day_size or the width which fits the screen size
+        final int tileSize = Math.min(widthPerTile, maxWidthPerTile);
+        Log.d("CalendarView", "WidthPerTile: " + widthPerTile + ", maxWidthPerTile: " + maxWidthPerTile);
+        Log.d("CalendarView", "screenwidth: " + screenWidth + ", daysInRow: " + daysInRow);
+        return tileSize;
+    }
+
+    private void updateDayWidth() {
+        final int dayWidth = getAvailableDayWidth();
+        final int childCount = getChildCount();
+
+        // Make sure the available day width is valid
+        if(dayWidth > 0) {
+            for(int i = 0; i < childCount; i++) {
+                final View child = getChildAt(i);
+                if(child instanceof  ViewGroup) {
+                    final ViewGroup childViewGroup = (ViewGroup) child;
+                    final int childItemCount = childViewGroup.getChildCount();
+
+                    for(int index = 0; index < childItemCount; index++) {
+                        final View dayView = childViewGroup.getChildAt(index);
+                        if(dayView != null) {
+                            final ViewGroup.LayoutParams params =
+                                    dayView.getLayoutParams();
+
+                            if(i == 0) {
+                                // This is the dayOfWeek TextView, so we use wrap_content on the height
+                                params.width = dayWidth;
+                            } else {
+                                // This is the layout for a single day which is a square
+                                params.width = dayWidth;
+                                params.height = dayWidth;
+                            }
+                            // Set the new LayoutParams
+                            dayView.setLayoutParams(params);
+                        }
+                    }
+                }
+            }
+            this.setVisibility(View.VISIBLE);
+        } else {
+            // We don't have a width available yet
+            this.setVisibility(View.INVISIBLE);
+        }
     }
 }
