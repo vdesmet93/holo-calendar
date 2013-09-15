@@ -72,7 +72,7 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
      */
     @SuppressWarnings("ConstantConditions")
     @Override
-    protected void initView(final int width) {
+    protected void initView() {
         // if no custom lastDayOfWeek was set, change it to the day before the first day so we show all 7 days
         if(mLastDayOfWeek == -1) {
             mLastDayOfWeek = mFirstDayOfWeek - 1;

@@ -207,12 +207,12 @@ public abstract class AbstractCalendarView extends LinearLayout {
 
         if(!mIsViewInitialized) {
             // initialize view
-            initView(r - l);
+            initView();
         }
         super.onLayout(changed, l, t, r, b);
     }
 
-    protected abstract void initView(final int width);
+    protected abstract void initView();
 
     /** Getter methods */
     public int getFirstDayOfWeek() {

@@ -25,8 +25,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="@dimen/lib_category_view_padding_startend"
         android:layout_marginRight="@dimen/lib_category_view_padding_startend"
-        android:layout_marginBottom="@dimen/lib_category_padding_bottom"
-        />
+        android:layout_marginBottom="@dimen/lib_category_padding_bottom" />
 
 
     <!-- Two lines on the left side and bottom to create a shadow -->
