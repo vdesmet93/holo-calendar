@@ -3,17 +3,14 @@ package com.vdesmet.lib.calendar;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
-import java.lang.Object;
 import java.util.Calendar;
 
 public class CalendarView extends AbstractCalendarView implements View.OnClickListener {
@@ -42,13 +39,27 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
         mLastDayOfWeek = -1;
 
         // Update day width if we have usable values
-        getViewTreeObserver().
-        addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                updateDayWidth();
-            }
-        });
+
+        final ViewTreeObserver observer = getViewTreeObserver();
+        if(observer != null) {
+            observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    updateDayWidth();
+
+                    // Remove the OnGlobalLayoutListener
+                    final ViewTreeObserver observer = getViewTreeObserver();
+                    if(observer != null) {
+                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                            observer.removeOnGlobalLayoutListener(this);
+                        } else {
+                            //noinspection deprecation
+                            observer.removeGlobalOnLayoutListener(this);
+                        }
+                    }
+                }
+            });
+        }
     }
 
     /**
@@ -219,12 +230,14 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
         final Typeface typeface = mTypeface;
 
         // inflate the ViewGroup where we'll put all the headers
-        final ViewGroup headers = (ViewGroup) inflater.inflate(R.layout.lib_calendar_headers, this, false);
+        final ViewGroup headers = (ViewGroup)
+                inflater.inflate(R.layout.lib_calendar_headers, this, false);
         int dayOfWeek = firstDayOfWeek;
 
         do {
             // initialize variables for this day
-            final TextView header = (TextView) inflater.inflate(R.layout.lib_calendar_single_header, headers, false);
+            final TextView header = (TextView)
+                    inflater.inflate(R.layout.lib_calendar_single_header, headers, false);
             final String nameOfDay = getNameForDay(dayOfWeek, resources);
 
             // if set, use the custom Typeface
@@ -268,8 +281,7 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
         // The maximum size of a tile(e.g. a single day)
         // This is either R.dimen.lib_calendar_day_size or the width which fits the screen size
         final int tileSize = Math.min(widthPerTile, maxWidthPerTile);
-        Log.d("CalendarView", "WidthPerTile: " + widthPerTile + ", maxWidthPerTile: " + maxWidthPerTile);
-        Log.d("CalendarView", "screenwidth: " + screenWidth + ", daysInRow: " + daysInRow);
+
         return tileSize;
     }
 

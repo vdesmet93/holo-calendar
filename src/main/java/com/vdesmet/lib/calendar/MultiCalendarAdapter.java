@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.viewpagerindicator.TitleProvider;
 
 import java.util.Calendar;
@@ -49,6 +50,7 @@ public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider{
 
     @Override
     public View instantiateItem(final ViewGroup container, final int position) {
+
         // initialize variables
         final MultiCalendarView multiCalendarView = mCalendarView;
         final Context context = multiCalendarView.getContext();

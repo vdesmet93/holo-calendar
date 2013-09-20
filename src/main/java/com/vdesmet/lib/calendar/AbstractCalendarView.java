@@ -204,12 +204,12 @@ public abstract class AbstractCalendarView extends LinearLayout {
 
     @Override
     protected void onLayout(final boolean changed, final int l, final int t, final int r, final int b) {
+        super.onLayout(changed, l, t, r, b);
 
         if(!mIsViewInitialized) {
             // initialize view
             initView();
         }
-        super.onLayout(changed, l, t, r, b);
     }
 
     protected abstract void initView();

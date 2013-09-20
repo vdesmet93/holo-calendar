@@ -2,7 +2,6 @@
 
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
         android:layout_width="@dimen/lib_calendar_day_size"
         android:background="@color/lib_calendar_day_background"
         android:layout_height="@dimen/lib_calendar_day_size"
@@ -15,11 +14,13 @@
         android:layout_height="match_parent"
         android:textColor="@color/lib_calendar_day_textcolor"
         android:textSize="@dimen/lib_calendar_day_textsize"
+        android:textIsSelectable="true"
         android:background="@drawable/list_selector_holo_light"
         android:gravity="center"/>
 
     <LinearLayout
         android:id="@+id/lib_calendar_day_categories"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

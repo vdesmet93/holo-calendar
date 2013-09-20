@@ -3,6 +3,8 @@ package com.vdesmet.lib.calendar;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.view.View;
+
 import com.viewpagerindicator.TitlePageIndicator;
 
 import java.util.Calendar;
@@ -13,6 +15,8 @@ public class MultiCalendarView extends AbstractCalendarView {
     private ViewPager mViewPager;
     private ViewPager.OnPageChangeListener mOnPageChangeListener;
     private MultiCalendarAdapter mAdapter;
+    private int mViewPagerPosition = -1;
+    private TitlePageIndicator mIndicator;
 
     public MultiCalendarView(final Context context) {
         super(context);
@@ -36,6 +40,21 @@ public class MultiCalendarView extends AbstractCalendarView {
         mIsViewInitialized = false;
         mFirstDayOfWeek = Calendar.MONDAY;
         mLastDayOfWeek = -1;
+
+        // Add ViewPager + TitlePageIndicator
+        final ViewPager viewPager = new ViewPager(getContext());
+
+        TitlePageIndicator indicator = new TitlePageIndicator(getContext());
+        if(mTypeface != null) {
+            indicator.setTypeface(mTypeface);
+        }
+        addView(indicator);
+
+        // Add view to layout
+        addView(viewPager);
+
+        mViewPager = viewPager;
+        mIndicator = indicator;
     }
 
     public void setIndicatorVisible(boolean visible) {
@@ -54,28 +73,33 @@ public class MultiCalendarView extends AbstractCalendarView {
     @Override
     protected void initView() {
         if(mFirstValidDay != null) {
-            removeAllViews();
-            final ViewPager viewPager = new ViewPager(getContext());
             final MultiCalendarAdapter adapter = new MultiCalendarAdapter(getContext(), this);
             adapter.setTypeface(mTypeface);
-            viewPager.setAdapter(adapter);
+            mViewPager.setAdapter(adapter);
 
-            if(mShowIndicator) {
-                TitlePageIndicator indicator = new TitlePageIndicator(getContext());
-                indicator.setViewPager(viewPager);
-                if(mTypeface != null) {
-                    indicator.setTypeface(mTypeface);
+            // Set the Actual Adapter
+            mIndicator.setViewPager(mViewPager);
+
+            // If indicator is visible while it shouldn't, or visa versa
+
+            if(mShowIndicator  != (getChildAt(0) == mIndicator)) {
+                // Show or hide the view
+                if(mShowIndicator) {
+                    mIndicator.setVisibility(View.VISIBLE);
+                } else {
+                    mIndicator.setVisibility(View.GONE);
                 }
-                addView(indicator);
             }
             if(mOnPageChangeListener != null) {
-                viewPager.setOnPageChangeListener(mOnPageChangeListener);
+                mViewPager.setOnPageChangeListener(mOnPageChangeListener);
             }
 
+            if(mViewPagerPosition != -1) {
+                // We need to change the ViewPager position
+                mViewPager.setCurrentItem(mViewPagerPosition);
+                mViewPagerPosition = -1;
+            }
 
-            addView(viewPager);
-
-            mViewPager = viewPager;
             mAdapter = adapter;
             mIsViewInitialized = true;
         }
@@ -86,5 +110,9 @@ public class MultiCalendarView extends AbstractCalendarView {
             mViewPager.setOnPageChangeListener(onPageChangeListener);
         }
         mOnPageChangeListener = onPageChangeListener;
+    }
+
+    public void setViewPagerPosition(final int viewPagerPosition) {
+        mViewPagerPosition = viewPagerPosition;
     }
 }
