@@ -17,6 +17,7 @@ public class MultiCalendarView extends AbstractCalendarView {
     private MultiCalendarAdapter mAdapter;
     private int mViewPagerPosition = -1;
     private TitlePageIndicator mIndicator;
+    private OnCalendarLoadedListener mOnCalendarLoadedListener;
 
     public MultiCalendarView(final Context context) {
         super(context);
@@ -103,6 +104,10 @@ public class MultiCalendarView extends AbstractCalendarView {
             }
 
             mIsViewInitialized = true;
+
+            if(mOnCalendarLoadedListener != null) {
+                mOnCalendarLoadedListener.onCalendarLoaded(this);
+            }
         }
     }
 
@@ -113,6 +118,9 @@ public class MultiCalendarView extends AbstractCalendarView {
         mOnPageChangeListener = onPageChangeListener;
     }
 
+    public void setOnCalendarLoadedListener(final OnCalendarLoadedListener listener) {
+        this.mOnCalendarLoadedListener = listener;
+    }
     public void setViewPagerPosition(final int viewPagerPosition) {
         mViewPagerPosition = viewPagerPosition;
     }
