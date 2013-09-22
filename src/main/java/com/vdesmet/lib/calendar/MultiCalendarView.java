@@ -39,20 +39,26 @@ public class MultiCalendarView extends AbstractCalendarView {
         mShowIndicator = true;
         mIsViewInitialized = false;
         mFirstDayOfWeek = Calendar.MONDAY;
-        mLastDayOfWeek = -1;
+        mLastDayOfWeek = Calendar.SUNDAY;
 
         // Add ViewPager + TitlePageIndicator
         final ViewPager viewPager = new ViewPager(getContext());
+        final MultiCalendarAdapter adapter = new MultiCalendarAdapter(getContext(), this);
+        adapter.setTypeface(mTypeface);
+        viewPager.setAdapter(adapter);
 
         TitlePageIndicator indicator = new TitlePageIndicator(getContext());
         if(mTypeface != null) {
             indicator.setTypeface(mTypeface);
         }
+        indicator.setViewPager(viewPager);
+
         addView(indicator);
 
         // Add view to layout
         addView(viewPager);
 
+        mAdapter = adapter;
         mViewPager = viewPager;
         mIndicator = indicator;
     }
@@ -61,9 +67,12 @@ public class MultiCalendarView extends AbstractCalendarView {
        this.mShowIndicator = visible;
     }
 
+    @Override
     public void notifyDataSetChanged() {
         if(mAdapter != null) {
             mAdapter.notifyDataSetChanged();
+            mViewPager.setAdapter(mAdapter);
+            mIndicator.setViewPager(mViewPager);
         }
     }
     public ViewPager getViewPager() {
@@ -73,21 +82,14 @@ public class MultiCalendarView extends AbstractCalendarView {
     @Override
     protected void initView() {
         if(mFirstValidDay != null) {
-            final MultiCalendarAdapter adapter = new MultiCalendarAdapter(getContext(), this);
-            adapter.setTypeface(mTypeface);
-            mViewPager.setAdapter(adapter);
-
-            // Set the Actual Adapter
-            mIndicator.setViewPager(mViewPager);
 
             // If indicator is visible while it shouldn't, or visa versa
-
             if(mShowIndicator  != (getChildAt(0) == mIndicator)) {
                 // Show or hide the view
                 if(mShowIndicator) {
-                    mIndicator.setVisibility(View.VISIBLE);
+                   mIndicator.setVisibility(View.VISIBLE);
                 } else {
-                    mIndicator.setVisibility(View.GONE);
+                   mIndicator.setVisibility(View.GONE);
                 }
             }
             if(mOnPageChangeListener != null) {
@@ -100,7 +102,6 @@ public class MultiCalendarView extends AbstractCalendarView {
                 mViewPagerPosition = -1;
             }
 
-            mAdapter = adapter;
             mIsViewInitialized = true;
         }
     }

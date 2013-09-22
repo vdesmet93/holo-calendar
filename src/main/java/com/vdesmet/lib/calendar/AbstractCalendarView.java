@@ -57,7 +57,7 @@ public abstract class AbstractCalendarView extends LinearLayout {
             // update calendar
             updateCalendar();
         }
-
+        notifyDataSetChanged();
     }
 
     /**
@@ -73,7 +73,7 @@ public abstract class AbstractCalendarView extends LinearLayout {
         }
 
         mLastDayOfWeek = day;
-
+        notifyDataSetChanged();
     }
 
     /**
@@ -92,6 +92,7 @@ public abstract class AbstractCalendarView extends LinearLayout {
         this.mFirstValidDay = firstValidDay;
 
         updateCalendar();
+        notifyDataSetChanged();
     }
 
     /**
@@ -107,6 +108,7 @@ public abstract class AbstractCalendarView extends LinearLayout {
         lastValidDay.set(Calendar.MILLISECOND, 0);
 
         this.mLastValidDay = lastValidDay;
+        notifyDataSetChanged();
     }
 
     /**
@@ -204,16 +206,19 @@ public abstract class AbstractCalendarView extends LinearLayout {
 
     @Override
     protected void onLayout(final boolean changed, final int l, final int t, final int r, final int b) {
-        super.onLayout(changed, l, t, r, b);
 
         if(!mIsViewInitialized) {
             // initialize view
             initView();
         }
+        super.onLayout(changed, l, t, r, b);
     }
 
     protected abstract void initView();
 
+    public void notifyDataSetChanged() {
+
+    }
     /** Getter methods */
     public int getFirstDayOfWeek() {
         return mFirstDayOfWeek;

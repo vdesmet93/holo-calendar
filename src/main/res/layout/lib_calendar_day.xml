@@ -14,7 +14,6 @@
         android:layout_height="match_parent"
         android:textColor="@color/lib_calendar_day_textcolor"
         android:textSize="@dimen/lib_calendar_day_textsize"
-        android:textIsSelectable="true"
         android:background="@drawable/list_selector_holo_light"
         android:gravity="center"/>
 

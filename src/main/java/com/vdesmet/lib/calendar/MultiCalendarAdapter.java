@@ -28,16 +28,19 @@ public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider{
         final Calendar firstDay = calendarView.getFirstValidDay();
         final Calendar lastDay = calendarView.getLastValidDay();
 
-        // get the difference in years and in months
-        // note that months may be smaller than zero,
-        // for example, when firstDay is December 2012 and lastDay is January 2013: (1*12) + (0 - 11) = 1 month
-        final int years = lastDay.get(Calendar.YEAR) - firstDay.get(Calendar.YEAR);
-        final int months = lastDay.get(Calendar.MONTH) - firstDay.get(Calendar.MONTH);
+        if(firstDay != null && lastDay != null) {
+            // get the difference in years and in months
+            // note that months may be smaller than zero,
+            // for example, when firstDay is December 2012 and lastDay is January 2013: (1*12) + (0 - 11) = 1 month
+            final int years = lastDay.get(Calendar.YEAR) - firstDay.get(Calendar.YEAR);
+            final int months = lastDay.get(Calendar.MONTH) - firstDay.get(Calendar.MONTH);
 
-        final int diffMonths =  (years * 12 ) + months;
+            final int diffMonths =  (years * 12 ) + months;
 
-        // January - February is 1 month later, but we have 2 months to show
-        return diffMonths + 1;
+            // January - February is 1 month later, but we have 2 months to show
+            return diffMonths + 1;
+        }
+        return 0;
 
     }
 
