@@ -111,8 +111,14 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
 
         ViewGroup weekLayout = (ViewGroup) inflater.inflate(R.layout.lib_calendar_week, this, false);
 
-        // continue adding days until we've done the day at the end of the week(usually in the next month)
-        while(currentDay.get(Calendar.MONTH) <= currentMonth || currentDay.get(Calendar.DAY_OF_WEEK) != lastDayOfWeek + 1) {
+        /* Continue adding days while:
+         *  # We're adding the last few days of the previous month          (modulo 12 to work in january)
+         *  # We're adding the days in the current month
+         *  # We're adding the first few days of the next month             (Add until we're at the end of the week)
+         */
+        while( (currentDay.get(Calendar.MONTH) + 1) % 12 == currentMonth ||
+                currentDay.get(Calendar.MONTH) == currentMonth ||
+                currentDay.get(Calendar.DAY_OF_WEEK) != lastDayOfWeek + 1) {
 
             // check if we need to add this day, if not, move to the next
             final int dayOfWeek = currentDay.get(Calendar.DAY_OF_WEEK);
