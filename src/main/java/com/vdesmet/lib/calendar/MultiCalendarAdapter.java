@@ -10,6 +10,8 @@ import com.viewpagerindicator.TitleProvider;
 
 import java.util.Calendar;
 
+import static com.vdesmet.lib.calendar.AbstractCalendarView.MONTHS_IN_YEAR;
+
 public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider{
     private final Context mContext;
     private final MultiCalendarView mCalendarView;
@@ -122,7 +124,7 @@ public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider{
         date.add(Calendar.MONTH, position);
 
         final String month;
-        switch(position + mCalendarView.getCurrentMonth()) {
+        switch((position + mCalendarView.getCurrentMonth()) % MONTHS_IN_YEAR) {
             case Calendar.JANUARY:
                 month = context.getString(R.string.lib_month_january);
                 break;

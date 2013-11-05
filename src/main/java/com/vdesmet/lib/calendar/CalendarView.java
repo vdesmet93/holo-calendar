@@ -112,11 +112,11 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
         ViewGroup weekLayout = (ViewGroup) inflater.inflate(R.layout.lib_calendar_week, this, false);
 
         /* Continue adding days while:
-         *  # We're adding the last few days of the previous month          (modulo 12 to work in january)
+         *  # We're adding the last few days of the previous month          (modulo to work in january)
          *  # We're adding the days in the current month
          *  # We're adding the first few days of the next month             (Add until we're at the end of the week)
          */
-        while( (currentDay.get(Calendar.MONTH) + 1) % 12 == currentMonth ||
+        while( (currentDay.get(Calendar.MONTH) + 1) % MONTHS_IN_YEAR == currentMonth ||
                 currentDay.get(Calendar.MONTH) == currentMonth ||
                 currentDay.get(Calendar.DAY_OF_WEEK) != lastDayOfWeek + 1) {
 

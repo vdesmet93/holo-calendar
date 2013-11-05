@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import java.util.Calendar;
 
 public abstract class AbstractCalendarView extends LinearLayout {
+    public static final int MONTHS_IN_YEAR = 12;
     protected boolean mIsViewInitialized;
 
     protected DayAdapter mDayAdapter;
