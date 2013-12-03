@@ -1,8 +1,10 @@
 package com.vdesmet.lib.calendar;
 
-/**
- * Created by vincent on 9/22/13.
- */
 public interface OnCalendarLoadedListener {
+
+    /**
+     * Called when the calendar's views are done loading
+     * @param view The view which is finished
+     */
     public abstract void onCalendarLoaded(MultiCalendarView view);
 }

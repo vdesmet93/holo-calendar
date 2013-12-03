@@ -65,7 +65,7 @@ public class MultiCalendarView extends AbstractCalendarView {
     }
 
     public void setIndicatorVisible(boolean visible) {
-       this.mShowIndicator = visible;
+        this.mShowIndicator = visible;
     }
 
     @Override
@@ -76,8 +76,9 @@ public class MultiCalendarView extends AbstractCalendarView {
             mIndicator.setViewPager(mViewPager);
         }
     }
+
     public ViewPager getViewPager() {
-        return  mViewPager;
+        return mViewPager;
     }
 
     @Override
@@ -85,12 +86,12 @@ public class MultiCalendarView extends AbstractCalendarView {
         if(mFirstValidDay != null) {
 
             // If indicator is visible while it shouldn't, or visa versa
-            if(mShowIndicator  != (getChildAt(0) == mIndicator)) {
+            if(mShowIndicator != (getChildAt(0) == mIndicator)) {
                 // Show or hide the view
                 if(mShowIndicator) {
-                   mIndicator.setVisibility(View.VISIBLE);
+                    mIndicator.setVisibility(View.VISIBLE);
                 } else {
-                   mIndicator.setVisibility(View.GONE);
+                    mIndicator.setVisibility(View.GONE);
                 }
             }
             if(mOnPageChangeListener != null) {
@@ -121,6 +122,7 @@ public class MultiCalendarView extends AbstractCalendarView {
     public void setOnCalendarLoadedListener(final OnCalendarLoadedListener listener) {
         this.mOnCalendarLoadedListener = listener;
     }
+
     public void setViewPagerPosition(final int viewPagerPosition) {
         mViewPagerPosition = viewPagerPosition;
     }

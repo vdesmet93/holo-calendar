@@ -159,10 +159,10 @@ public abstract class AbstractCalendarView extends LinearLayout {
         final int calendarDay = calendar.get(Calendar.DAY_OF_WEEK);
 
         // get the number of days we need to remove from the calendar, to start the calendar at mFirstDayOfWeek;
-        final int daysTowithdraw = calendarDay - mFirstDayOfWeek;
+        final int daysToWithdraw = calendarDay - mFirstDayOfWeek;
 
         // withdraw that number from the calendar
-        calendar.add(Calendar.DAY_OF_WEEK, -daysTowithdraw);
+        calendar.add(Calendar.DAY_OF_WEEK, -daysToWithdraw);
 
         // set all the useless attributes to 0
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -249,6 +249,11 @@ public abstract class AbstractCalendarView extends LinearLayout {
         return mCurrentMonth;
     }
 
+    /**
+     * Get the number of days visible in one row.
+     * For example, from monday to friday -> 5
+     * @return the number of columns in a row
+     */
     public int getDaysInRow() {
         int firstDayOfWeek = mFirstDayOfWeek;
         int daysInRow = 1;

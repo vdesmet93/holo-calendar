@@ -29,7 +29,6 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
     public CalendarView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         init();
-
     }
 
     private void init() {
@@ -39,7 +38,6 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
         mLastDayOfWeek = -1;
 
         // Update day width if we have usable values
-
         final ViewTreeObserver observer = getViewTreeObserver();
         if(observer != null) {
             observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -50,7 +48,7 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
                     // Remove the OnGlobalLayoutListener
                     final ViewTreeObserver observer = getViewTreeObserver();
                     if(observer != null) {
-                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                             observer.removeOnGlobalLayoutListener(this);
                         } else {
                             //noinspection deprecation
@@ -70,7 +68,7 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
     public void onClick(final View v) {
         // user clicked on a TextView
         if(v != null) {
-            final long timeInMillis =  Long.parseLong(v.getTag().toString());
+            final long timeInMillis = Long.parseLong(v.getTag().toString());
             if(mOnDayClickListener != null) {
                 mOnDayClickListener.onDayClick(timeInMillis);
             }
@@ -79,9 +77,8 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
 
     /**
      * Create the view
-     * Initializes the headers, views for all visible days
+     * Initializes the headers and views for all visible days
      */
-    @SuppressWarnings("ConstantConditions")
     @Override
     protected void initView() {
         // if no custom lastDayOfWeek was set, change it to the day before the first day so we show all 7 days
@@ -116,7 +113,7 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
          *  # We're adding the days in the current month
          *  # We're adding the first few days of the next month             (Add until we're at the end of the week)
          */
-        while( (currentDay.get(Calendar.MONTH) + 1) % MONTHS_IN_YEAR == currentMonth ||
+        while((currentDay.get(Calendar.MONTH) + 1) % MONTHS_IN_YEAR == currentMonth ||
                 currentDay.get(Calendar.MONTH) == currentMonth ||
                 currentDay.get(Calendar.DAY_OF_WEEK) != lastDayOfWeek + 1) {
 
@@ -130,8 +127,7 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
                     // we don't want to have this dayOfWeek in our calendar, so move to the next one
                     moveToNext = true;
                 }
-            }
-            else if(dayOfWeek < firstDayOfWeek || dayOfWeek > lastDayOfWeek) {
+            } else if(dayOfWeek < firstDayOfWeek || dayOfWeek > lastDayOfWeek) {
                 // we don't want to have this dayOfWeek in our calendar, so move to the next one
                 moveToNext = true;
             }
@@ -139,7 +135,6 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
                 // move to the next day
                 currentDay.add(Calendar.DAY_OF_WEEK, 1);
                 continue;
-
             }
             // setup variables and layouts for this day
             final long timeInMillis = currentDay.getTimeInMillis();
@@ -156,23 +151,26 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
             final int dayOfMonth = currentDay.get(Calendar.DAY_OF_MONTH);
             dayTextView.setText(String.valueOf(dayOfMonth));
 
-            // check if we need to disable the view
-            //because it's in another month, or if it's before the first valid day, or after the last valid day
-            // or if the adapter says it should be disabled
-            if( !adapter.isDayEnabled(timeInMillis) ||
+            /* We need to disable the view when:
+             *  # The adapter says it should be disabled
+             *  # This day is in another month              (We fill the rows at the begin/end of the month)
+             *  # This day is before the first valid day
+             *  # This day is after the last valid day
+             */
+            if(!adapter.isDayEnabled(timeInMillis) ||
                     (currentDay.get(Calendar.MONTH) != currentMonth) ||
-               (firstValidDay != null && currentDay.before(firstValidDay)) ||
-               (lastValidDay != null && currentDay.after(lastValidDay))) {
+                    (firstValidDay != null && currentDay.before(firstValidDay)) ||
+                    (lastValidDay != null && currentDay.after(lastValidDay))) {
+
                 // change the appearance if it's disabled
                 layout.setBackgroundColor(dayDisabledBackgroundColor);
                 dayTextView.setTextColor(dayDisabledTextColor);
                 // disable the views
                 dayTextView.setEnabled(false);
                 layout.setEnabled(false);
-            }
-            else {
+            } else {
                 // allow the adapter to update the TextView
-                // e.g. change TypeFace, font size, color based on the time
+                // e.g. change font size or color based on the date
                 adapter.updateTextView(dayTextView, timeInMillis);
 
                 // create a new view for each category
@@ -185,7 +183,7 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
                         // set the background color to the color provided by the adapter
                         category.setBackgroundColor(color);
 
-                        // add the view to the ViewGroup. Note that we can't do this while inflating
+                        // add the view to the ViewGroup. Note that we can't do this while inflating,
                         // because that will cause the view to match the size of his parent
                         categories.addView(category);
                     }
@@ -196,12 +194,11 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
             dayTextView.setTag(timeInMillis);
             dayTextView.setOnClickListener(this);
 
-
             // add layout to view
             weekLayout.addView(layout);
 
             if(dayOfWeek == lastDayOfWeek) {
-                // this is the last day in the week/row, add a new one
+                // this is the last day in the week/row, add a new row
                 addView(weekLayout);
 
                 weekLayout = (ViewGroup) inflater.inflate(R.layout.lib_calendar_week, this, false);
@@ -211,6 +208,7 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
             currentDay.add(Calendar.DAY_OF_WEEK, 1);
         }
 
+        // Make sure the weekLayout is added to the layout
         if(weekLayout.getParent() == null) {
             addView(weekLayout);
         }
@@ -218,6 +216,7 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
         // Update the day widths
         updateDayWidth();
 
+        // Finished initializing
         mIsViewInitialized = true;
     }
 
@@ -264,14 +263,11 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
             // increment dayOfWeek, make sure it's a valid day
             dayOfWeek = dayOfWeek % 7;
             dayOfWeek++;
-
         } while(dayOfWeek != lastDayOfWeek + 1);
 
         // add the headers View
         addView(headers);
     }
-
-
 
     private int getAvailableDayWidth() {
         // Calculate the available width for a single day-item
@@ -286,9 +282,7 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
 
         // The maximum size of a tile(e.g. a single day)
         // This is either R.dimen.lib_calendar_day_size or the width which fits the screen size
-        final int tileSize = Math.min(widthPerTile, maxWidthPerTile);
-
-        return tileSize;
+        return Math.min(widthPerTile, maxWidthPerTile);
     }
 
     private void updateDayWidth() {
@@ -299,7 +293,7 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
         if(dayWidth > 0) {
             for(int i = 0; i < childCount; i++) {
                 final View child = getChildAt(i);
-                if(child instanceof  ViewGroup) {
+                if(child instanceof ViewGroup) {
                     final ViewGroup childViewGroup = (ViewGroup) child;
                     final int childItemCount = childViewGroup.getChildCount();
 
@@ -310,7 +304,7 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
                                     dayView.getLayoutParams();
 
                             if(i == 0) {
-                                // This is the dayOfWeek TextView, so we use wrap_content on the height
+                                // This is the dayOfWeek TextView(header), so we use wrap_content on the height
                                 params.width = dayWidth;
                             } else {
                                 // This is the layout for a single day which is a square

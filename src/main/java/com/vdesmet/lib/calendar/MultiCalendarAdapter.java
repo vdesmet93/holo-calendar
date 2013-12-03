@@ -10,9 +10,7 @@ import com.viewpagerindicator.TitleProvider;
 
 import java.util.Calendar;
 
-import static com.vdesmet.lib.calendar.AbstractCalendarView.MONTHS_IN_YEAR;
-
-public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider{
+public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider {
     private final Context mContext;
     private final MultiCalendarView mCalendarView;
     private Typeface mTypeface;
@@ -33,23 +31,22 @@ public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider{
         if(firstDay != null && lastDay != null) {
             // get the difference in years and in months
             // note that months may be smaller than zero,
-            // for example, when firstDay is December 2012 and lastDay is January 2013: (1*12) + (0 - 11) = 1 month
+            // for example, when firstDay is December 2012 and lastDay is January 2013: (1*12) + (0 - 11) = 1
             final int years = lastDay.get(Calendar.YEAR) - firstDay.get(Calendar.YEAR);
             final int months = lastDay.get(Calendar.MONTH) - firstDay.get(Calendar.MONTH);
 
-            final int diffMonths =  (years * 12 ) + months;
+            final int diffMonths = (years * 12) + months;
 
             // January - February is 1 month later, but we have 2 months to show
             return diffMonths + 1;
         }
         return 0;
-
     }
 
     @Override
     public void destroyItem(final ViewGroup container, final int position, final Object item) {
         if(item instanceof View) {
-            container.removeView((View)item);
+            container.removeView((View) item);
         }
     }
 
@@ -104,15 +101,14 @@ public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider{
         return POSITION_NONE;
     }
 
-
     @Override
     public boolean isViewFromObject(final View view, final Object o) {
         return view == o;
     }
 
-
     /**
      * Get the title for the current position
+     *
      * @param position - The position in the ViewPager
      * @return Title: MONTH YEAR -> MARCH 2013
      */
@@ -124,7 +120,7 @@ public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider{
         date.add(Calendar.MONTH, position);
 
         final String month;
-        switch((position + mCalendarView.getCurrentMonth()) % MONTHS_IN_YEAR) {
+        switch(date.get(Calendar.MONTH)) {
             case Calendar.JANUARY:
                 month = context.getString(R.string.lib_month_january);
                 break;
@@ -162,7 +158,7 @@ public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider{
             case Calendar.DECEMBER:
                 month = context.getString(R.string.lib_month_december);
                 break;
-         }
+        }
 
         return month + " " + date.get(Calendar.YEAR);
     }
