@@ -14,7 +14,6 @@ import android.widget.TextView;
 import java.util.Calendar;
 
 public class CalendarView extends AbstractCalendarView implements View.OnClickListener {
-    private static final int PADDING_COUNT = 14;
 
     public CalendarView(final Context context) {
         super(context);
@@ -274,8 +273,8 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
         final int paddingSides = getResources()
                 .getDimensionPixelSize(R.dimen.lib_calendar_day_padding_sides);
         final int screenWidth = getWidth();
-        final int availableWidth = screenWidth - (paddingSides * PADDING_COUNT);
         final int daysInRow = getDaysInRow();
+        final int availableWidth = screenWidth - (paddingSides * daysInRow * 2); // padding is at both sides( * 2)
         final int widthPerTile = availableWidth / daysInRow;
         final int maxWidthPerTile =
                 getResources().getDimensionPixelSize(R.dimen.lib_calendar_day_size);
