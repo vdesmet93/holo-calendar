@@ -15,6 +15,8 @@ import java.util.Calendar;
 
 public class CalendarView extends AbstractCalendarView implements View.OnClickListener {
 
+    private Typeface mRobotoLight;
+
     public CalendarView(final Context context) {
         super(context);
         init();
@@ -35,6 +37,9 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
         mIsViewInitialized = false;
         mFirstDayOfWeek = Calendar.MONDAY;
         mLastDayOfWeek = -1;
+
+        // Load the Roboto light typeface
+        mRobotoLight = Typeface.createFromAsset(getResources().getAssets(), "roboto_light.ttf");
 
         // Update day width if we have usable values
         final ViewTreeObserver observer = getViewTreeObserver();
