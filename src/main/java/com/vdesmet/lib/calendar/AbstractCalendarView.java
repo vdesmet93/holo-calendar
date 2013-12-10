@@ -124,10 +124,21 @@ public abstract class AbstractCalendarView extends LinearLayout {
 
     /**
      * Set a custom Typeface for the days and headers(1-31 and Mon-Sun)
-     * @param newTypeFace The new Typeface which will be used
+     * @param newTypeFace The new Typeface which will be used, or null for default(Roboto Light)
      */
     public void setTypeface(final Typeface newTypeFace) {
-        this.mTypeface = newTypeFace;
+        if(newTypeFace != null) {
+            this.mTypeface = newTypeFace;
+        } else {
+            // newTypeFace is null, reset to default
+            setDefaultTypeface();
+        }
+    }
+
+    protected void setDefaultTypeface() {
+        // Load the Roboto light typeface
+        final Typeface defaultTypeface = Typeface.createFromAsset(getResources().getAssets(), "roboto_light.ttf");
+        setTypeface(defaultTypeface);
     }
 
     /**

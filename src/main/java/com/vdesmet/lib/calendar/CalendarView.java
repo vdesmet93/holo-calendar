@@ -15,8 +15,6 @@ import java.util.Calendar;
 
 public class CalendarView extends AbstractCalendarView implements View.OnClickListener {
 
-    private Typeface mRobotoLight;
-
     public CalendarView(final Context context) {
         super(context);
         init();
@@ -38,8 +36,8 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
         mFirstDayOfWeek = Calendar.MONDAY;
         mLastDayOfWeek = -1;
 
-        // Load the Roboto light typeface
-        mRobotoLight = Typeface.createFromAsset(getResources().getAssets(), "roboto_light.ttf");
+        // Set the default Typeface
+        setDefaultTypeface();
 
         // Update day width if we have usable values
         final ViewTreeObserver observer = getViewTreeObserver();
@@ -161,7 +159,7 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
              *  # This day is before the first valid day
              *  # This day is after the last valid day
              */
-            if(!adapter.isDayEnabled(timeInMillis) ||
+            if( (adapter != null && !adapter.isDayEnabled(timeInMillis)) ||
                     (currentDay.get(Calendar.MONTH) != currentMonth) ||
                     (firstValidDay != null && currentDay.before(firstValidDay)) ||
                     (lastValidDay != null && currentDay.after(lastValidDay))) {
@@ -175,21 +173,23 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
             } else {
                 // allow the adapter to update the TextView
                 // e.g. change font size or color based on the date
-                adapter.updateTextView(dayTextView, timeInMillis);
+                if(adapter != null) {
+                    adapter.updateTextView(dayTextView, timeInMillis);
 
-                // create a new view for each category
-                final int[] colors = adapter.getCategoryColors(timeInMillis);
-                if(colors != null) {
-                    for(final int color : colors) {
-                        // inflate a new category
-                        final View category = inflater.inflate(R.layout.lib_calendar_category, categories, false);
+                    // create a new view for each category
+                    final int[] colors = adapter.getCategoryColors(timeInMillis);
+                    if(colors != null) {
+                        for(final int color : colors) {
+                            // inflate a new category
+                            final View category = inflater.inflate(R.layout.lib_calendar_category, categories, false);
 
-                        // set the background color to the color provided by the adapter
-                        category.setBackgroundColor(color);
+                            // set the background color to the color provided by the adapter
+                            category.setBackgroundColor(color);
 
-                        // add the view to the ViewGroup. Note that we can't do this while inflating,
-                        // because that will cause the view to match the size of his parent
-                        categories.addView(category);
+                            // add the view to the ViewGroup. Note that we can't do this while inflating,
+                            // because that will cause the view to match the size of his parent
+                            categories.addView(category);
+                        }
                     }
                 }
             }
@@ -256,7 +256,9 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
 
             // allow adapter to update the TextView
             // e.g. change font, appearance, add click listener on all/some days
-            adapter.updateHeaderTextView(header, dayOfWeek);
+            if(adapter != null) {
+                adapter.updateHeaderTextView(header, dayOfWeek);
+            }
 
             // set the text
             header.setText(nameOfDay);
