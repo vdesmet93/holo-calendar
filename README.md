@@ -3,6 +3,7 @@ Holo Calendar
 
 A Holo Calendar library for Android. This library is based on This is [+Loranz Yousif](https://plus.google.com/+LoranzYousif "Loranz Yousif")'s design.
 
+![Screenshot](https://raw.github.com/vdesmet93/holo-calendar/master/Calendar-preview.png)
 
 This Calendar library makes it simple to add a full Calendar View in your Android application. The library contains a view to show a single month(CalendarView), and multiple months(MultiCalendarView) in a ViewPager.
 
