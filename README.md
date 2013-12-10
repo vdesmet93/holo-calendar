@@ -46,6 +46,11 @@ The Calendar also allows for customization:
 * Disable the TitlePageIndicator when using MultiCalendarView
 
 
+Sample
+======
+A sample project for this library is coming soon!
+
+
 Special Thanks
 ==============
 * Thanks to Loranz Yousif for designing the Calendar itself. Due to his designs, this library was made. 
