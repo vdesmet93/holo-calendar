@@ -12,6 +12,7 @@ import java.util.Calendar;
 
 public abstract class AbstractCalendarView extends LinearLayout {
     public static final int MONTHS_IN_YEAR = 12;
+    private static final int DAYS_IN_WEEK = 7;
     protected boolean mIsViewInitialized;
 
     protected DayAdapter mDayAdapter;
@@ -170,7 +171,11 @@ public abstract class AbstractCalendarView extends LinearLayout {
         final int calendarDay = calendar.get(Calendar.DAY_OF_WEEK);
 
         // get the number of days we need to remove from the calendar, to start the calendar at mFirstDayOfWeek;
-        final int daysToWithdraw = calendarDay - mFirstDayOfWeek;
+        final int daysToWithdraw;
+        if(mFirstDayOfWeek > calendarDay)
+            daysToWithdraw = (calendarDay + DAYS_IN_WEEK) - mFirstDayOfWeek;
+        else
+            daysToWithdraw = calendarDay - mFirstDayOfWeek;
 
         // withdraw that number from the calendar
         calendar.add(Calendar.DAY_OF_WEEK, -daysToWithdraw);
