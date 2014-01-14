@@ -48,7 +48,7 @@ The Calendar also allows for customization:
 
 Sample
 ======
-A sample project for this library is coming soon!
+A sample application is available on [Github](https://github.com/vdesmet93/holo-calendar-sample) and available for download on [Google Play](https://play.google.com/store/apps/details?id=com.vdesmet.sample.calendar).   
 
 
 Special Thanks
