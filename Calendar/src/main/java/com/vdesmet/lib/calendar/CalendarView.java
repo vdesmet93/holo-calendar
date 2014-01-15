@@ -194,7 +194,8 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
                 }
             }
 
-            // set TextView tag to the timeInMillis for the onClickListener
+            // set tag to the timeInMillis for the onClickListener and to be able to retrieve the TextView later on
+            layout.setTag(timeInMillis);
             dayTextView.setTag(timeInMillis);
             dayTextView.setOnClickListener(this);
 
@@ -222,6 +223,26 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
 
         // Finished initializing
         mIsViewInitialized = true;
+    }
+
+    @Override
+    public TextView getTextViewForDate(final long dayInMillis) {
+        // Loop through all children
+        final int childCount = getChildCount();
+        for(int i = 0; i < childCount; i++) {
+            final View weekLayout = getChildAt(i);
+            if(weekLayout != null) {
+                // Let the weekLayout find a view with a correct tag
+                final View dayLayout = weekLayout.findViewWithTag(dayInMillis);
+                if(dayLayout != null) {
+                    // Find the TextView, and return it
+                    return (TextView) dayLayout.findViewById(R.id.lib_calendar_day_text);
+                }
+            }
+
+        }
+        // No suitable TextView found, return null
+        return null;
     }
 
     /**

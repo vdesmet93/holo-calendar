@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.Calendar;
 
@@ -285,4 +286,11 @@ public abstract class AbstractCalendarView extends LinearLayout {
         return daysInRow;
     }
 
+    /**
+     * Retrieve the TextView used for the [timeInMillis] date
+     *
+     * @param timeInMillis The time in milliseconds
+     * @return The TextView representing the entered date
+     */
+    public abstract TextView getTextViewForDate(final long dayInMillis);
 }
