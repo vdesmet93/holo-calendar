@@ -13,7 +13,6 @@ import java.util.Calendar;
 public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider {
     private final Context mContext;
     private final MultiCalendarView mCalendarView;
-    private Typeface mTypeface;
 
     public MultiCalendarAdapter(final Context context, final MultiCalendarView calendarView) {
         super();
@@ -63,7 +62,7 @@ public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider 
         final int firstDayOfWeek = multiCalendarView.getFirstDayOfWeek();
         final int lastDayOfWeek = multiCalendarView.getLastDayOfWeek();
         final int dayStyle = multiCalendarView.getDayStyle();
-        final Typeface typeface = mTypeface;
+        final Typeface typeface = multiCalendarView.getTypeface();
 
         // create first day of the monthView
         final Calendar firstMonthDay = Calendar.getInstance();
@@ -165,9 +164,5 @@ public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider 
         }
 
         return month + " " + date.get(Calendar.YEAR);
-    }
-
-    public void setTypeface(final Typeface typeface) {
-        this.mTypeface = typeface;
     }
 }

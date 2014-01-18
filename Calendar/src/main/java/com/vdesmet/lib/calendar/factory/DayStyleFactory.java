@@ -54,4 +54,17 @@ public class DayStyleFactory {
                 throw new IllegalArgumentException("Day Style is invalid, cannot inflate day layout.");
         }
     }
+
+    public static int getBackgroundResourceForStyle(final int dayStyle) {
+        switch(dayStyle) {
+            case DAY_STYLE_TILED:
+                return R.color.lib_calendar_background;
+            case DAY_STYLE_FLAT:
+                return R.color.lib_calendar_background_flat;
+
+            default:
+                // Invalid style, throw exception
+                throw new IllegalArgumentException("Day Style is invalid, cannot inflate day layout.");
+        }
+    }
 }

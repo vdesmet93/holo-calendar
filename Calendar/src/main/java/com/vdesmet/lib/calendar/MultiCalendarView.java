@@ -46,7 +46,6 @@ public class MultiCalendarView extends AbstractCalendarView {
         // Add ViewPager + TitlePageIndicator
         final ViewPager viewPager = new ViewPager(getContext());
         final MultiCalendarAdapter adapter = new MultiCalendarAdapter(getContext(), this);
-        adapter.setTypeface(mTypeface);
         viewPager.setAdapter(adapter);
 
         TitlePageIndicator indicator = new TitlePageIndicator(getContext());

@@ -36,8 +36,10 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
         setOrientation(VERTICAL);
         mIsViewInitialized = false;
 
-        // Set the default Typeface
-        setDefaultTypeface();
+        // Set the default Typeface if none was set previously
+        if(mTypeface == null) {
+            setDefaultTypeface();
+        }
 
         // Update day width if we have usable values
         final ViewTreeObserver observer = getViewTreeObserver();
@@ -83,6 +85,10 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
      */
     @Override
     protected void initView() {
+        // Set the background color
+        final int backgroundColor = DayStyleFactory.getBackgroundResourceForStyle(mDayStyle);
+        setBackgroundResource(backgroundColor);
+
         // create the headers for the day of the week
         createHeaders();
 

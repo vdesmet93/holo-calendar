@@ -355,12 +355,19 @@ public abstract class AbstractCalendarView extends LinearLayout {
     }
 
     /**
+     * Returns the currently selected Typeface
+     * @return the selected typeface
+     */
+    public Typeface getTypeface() {
+        return mTypeface;
+    }
+
+    /**
      * Retrieve the TextView used for the [timeInMillis] date
      *
      * @param dayInMillis The time in milliseconds
      * @return The TextView representing the entered date
      */
     public abstract TextView getTextViewForDate(final long dayInMillis);
-
 
 }
