@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="AbstractCalendarView">
+
+        <!-- Set the style of a single day. Tiled shows a border around each day.
+             Flat only shows the numbers(and optional categories) of each day.-->
+        <attr name="dayStyle" format="enum">
+            <enum name="tiled" value="0" />
+            <enum name="flat" value="1" />
+        </attr>
+
+        <!-- Set the first visible day in the Calendar -->
+        <attr name="firstDayOfWeek" format="enum">
+            <enum name="sunday" value="1" />
+            <enum name="monday" value="2" />
+            <enum name="tuesday" value="3" />
+            <enum name="wednesday" value="4" />
+            <enum name="thursday" value="5" />
+            <enum name="friday" value="6" />
+            <enum name="saturday" value="7" />
+        </attr>
+
+        <!-- Set the last visible day in the Calendar -->
+        <attr name="lastDayOfWeek" format="enum">
+            <enum name="sunday" value="1" />
+            <enum name="monday" value="2" />
+            <enum name="tuesday" value="3" />
+            <enum name="wednesday" value="4" />
+            <enum name="thursday" value="5" />
+            <enum name="friday" value="6" />
+            <enum name="saturday" value="7" />
+        </attr>
+
+    </declare-styleable>
+</resources>

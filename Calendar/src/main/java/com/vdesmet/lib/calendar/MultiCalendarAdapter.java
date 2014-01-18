@@ -62,6 +62,7 @@ public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider 
         final OnDayClickListener onDayClickListener = multiCalendarView.getOnDayClickListener();
         final int firstDayOfWeek = multiCalendarView.getFirstDayOfWeek();
         final int lastDayOfWeek = multiCalendarView.getLastDayOfWeek();
+        final int dayStyle = multiCalendarView.getDayStyle();
         final Typeface typeface = mTypeface;
 
         // create first day of the monthView
@@ -90,6 +91,9 @@ public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider 
         // set first and last day of week
         monthView.setFirstDayOfWeek(firstDayOfWeek);
         monthView.setLastDayOfWeek(lastDayOfWeek);
+
+        // set day style
+        monthView.setDayStyle(dayStyle);
 
         // return view
         container.addView(monthView);

@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
+import com.vdesmet.lib.calendar.factory.DayStyleFactory;
+
 import java.util.Calendar;
 
 public class CalendarView extends AbstractCalendarView implements View.OnClickListener {
@@ -33,8 +35,6 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
     private void init() {
         setOrientation(VERTICAL);
         mIsViewInitialized = false;
-        mFirstDayOfWeek = Calendar.MONDAY;
-        mLastDayOfWeek = -1;
 
         // Set the default Typeface
         setDefaultTypeface();
@@ -83,14 +83,6 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
      */
     @Override
     protected void initView() {
-        // if no custom lastDayOfWeek was set, change it to the day before the first day so we show all 7 days
-        if(mLastDayOfWeek == -1) {
-            mLastDayOfWeek = mFirstDayOfWeek - 1;
-            if(mLastDayOfWeek <= 0) {
-                mLastDayOfWeek = 7;
-            }
-        }
-
         // create the headers for the day of the week
         createHeaders();
 
@@ -104,7 +96,8 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
         final int firstDayOfWeek = mFirstDayOfWeek;
         final int lastDayOfWeek = mLastDayOfWeek;
         final int currentMonth = mCurrentMonth;
-        final int dayDisabledBackgroundColor = getResources().getColor(R.color.lib_calendar_day_background_disabled);
+        final int dayStyle = mDayStyle;
+        final int dayDisabledBackgroundColor = DayStyleFactory.getDayDisabledBackgroundColor(dayStyle, getResources());
         final int dayDisabledTextColor = getResources().getColor(R.color.lib_calendar_day_textcolor_disabled);
         final Typeface typeface = mTypeface;
 
@@ -140,7 +133,7 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
             }
             // setup variables and layouts for this day
             final long timeInMillis = currentDay.getTimeInMillis();
-            final ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.lib_calendar_day, this, false);
+            final ViewGroup layout = DayStyleFactory.getDayLayoutForStyle(inflater, this, dayStyle);
             final TextView dayTextView = (TextView) layout.findViewById(R.id.lib_calendar_day_text);
             final ViewGroup categories = (ViewGroup) layout.findViewById(R.id.lib_calendar_day_categories);
 
@@ -159,7 +152,7 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
              *  # This day is before the first valid day
              *  # This day is after the last valid day
              */
-            if( (adapter != null && !adapter.isDayEnabled(timeInMillis)) ||
+            if((adapter != null && !adapter.isDayEnabled(timeInMillis)) ||
                     (currentDay.get(Calendar.MONTH) != currentMonth) ||
                     (firstValidDay != null && currentDay.before(firstValidDay)) ||
                     (lastValidDay != null && currentDay.after(lastValidDay))) {
@@ -239,7 +232,6 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
                     return (TextView) dayLayout.findViewById(R.id.lib_calendar_day_text);
                 }
             }
-
         }
         // No suitable TextView found, return null
         return null;

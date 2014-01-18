@@ -3,21 +3,27 @@ package com.vdesmet.lib.calendar;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.vdesmet.lib.calendar.factory.DayStyleFactory;
+
 import java.util.Calendar;
 
 public abstract class AbstractCalendarView extends LinearLayout {
     public static final int MONTHS_IN_YEAR = 12;
     private static final int DAYS_IN_WEEK = 7;
+
     protected boolean mIsViewInitialized;
 
     protected DayAdapter mDayAdapter;
     protected Calendar mCalendarFirstDay;
+
+    protected int mDayStyle;
 
     protected int mCurrentMonth;
     protected int mFirstDayOfWeek;
@@ -34,19 +40,63 @@ public abstract class AbstractCalendarView extends LinearLayout {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public AbstractCalendarView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
+        parseAttributes(context, attrs);
     }
 
     public AbstractCalendarView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
+        parseAttributes(context, attrs);
     }
 
     public AbstractCalendarView(final Context context) {
         super(context);
     }
 
+    private void parseAttributes(final Context context, final AttributeSet attrs) {
+        final Resources.Theme theme = context.getTheme();
+        if(theme != null) {
+            TypedArray a = theme.obtainStyledAttributes(
+                    attrs,
+                    R.styleable.AbstractCalendarView,
+                    0, 0);
+
+            try {
+                // Retrieve the first day of week
+                //noinspection ConstantConditions
+                final int firstDay = a.getInt(R.styleable.AbstractCalendarView_firstDayOfWeek, Calendar.MONDAY);
+                setFirstDayOfWeek(firstDay);
+
+                // Retrieve the last day of week
+                final int lastDay = a.getInt(R.styleable.AbstractCalendarView_firstDayOfWeek, Calendar.SUNDAY);
+                setLastDayOfWeek(lastDay);
+
+                // Retrieve the style for the day views
+                mDayStyle = a.getInt(R.styleable.AbstractCalendarView_dayStyle, DayStyleFactory.DEFAULT_STYLE);
+            } finally {
+                //noinspection ConstantConditions
+                a.recycle();
+            }
+        }
+    }
+
+    /**
+     * Set the style for a single day. See DayStyleFactory for options.
+     *
+     * @param dayStyle The style
+     * @see com.vdesmet.lib.calendar.factory.DayStyleFactory DayStyleFactory: Check the available values
+     */
+    public void setDayStyle(int dayStyle) {
+        if(DayStyleFactory.isValidStyle(dayStyle)) {
+            this.mDayStyle = dayStyle;
+        } else {
+            throw new IllegalArgumentException("Day Style is invalid. Check DayStyleFactory for options");
+        }
+    }
+
     /**
      * Set the first day of the week that needs to be shown
      * All days of the week are valid
+     *
      * @param day Day of the week. e.g. Calendar.MONDAY
      */
     public void setFirstDayOfWeek(final int day) {
@@ -68,6 +118,7 @@ public abstract class AbstractCalendarView extends LinearLayout {
      * All days of the week are valid
      * If not set, it'll pick the day before the first day of the week
      * Possible implementation: Hide the weekends -> setLastDayOfWeek(Calendar.FRIDAY)
+     *
      * @param day Day of the week. e.g. Calendar.SUNDAY
      */
     public void setLastDayOfWeek(final int day) {
@@ -81,6 +132,7 @@ public abstract class AbstractCalendarView extends LinearLayout {
 
     /**
      * Set a first valid day. All the days before this day will be disabled.
+     *
      * @param firstValidDay The first valid day
      */
     public void setFirstValidDay(final Calendar firstValidDay) {
@@ -101,6 +153,7 @@ public abstract class AbstractCalendarView extends LinearLayout {
     /**
      * (Optional) Set a custom last valid day. If set, all the days after this day will be disabled.
      * If not set, this will be the last day of the month
+     *
      * @param lastValidDay The last valid day
      */
     public void setLastValidDay(final Calendar lastValidDay) {
@@ -118,6 +171,7 @@ public abstract class AbstractCalendarView extends LinearLayout {
      * Set a DayAdapter
      * The DayAdapter will be able to change the TextViews of the headers/days
      * and is able to add Category Colors to days
+     *
      * @param newAdapter The (new) adapter to be set
      */
     public void setDayAdapter(DayAdapter newAdapter) {
@@ -126,6 +180,7 @@ public abstract class AbstractCalendarView extends LinearLayout {
 
     /**
      * Set a custom Typeface for the days and headers(1-31 and Mon-Sun)
+     *
      * @param newTypeFace The new Typeface which will be used, or null for default(Roboto Light)
      */
     public void setTypeface(final Typeface newTypeFace) {
@@ -145,6 +200,7 @@ public abstract class AbstractCalendarView extends LinearLayout {
 
     /**
      * Set an onDayClick listener, which will be called when the user clicked on a valid Day
+     *
      * @param listener Listener to respond to onClick events
      */
     public void setOnDayClickListener(OnDayClickListener listener) {
@@ -193,6 +249,7 @@ public abstract class AbstractCalendarView extends LinearLayout {
 
     /**
      * Get a human readable name for this day of the week
+     *
      * @param dayOfWeek between Calendar.SUNDAY and Calendar.SATURDAY
      * @param resources A resources object which can be retrieved by Context.getResources()
      * @return A name for this day of the week. MON - SUN.
@@ -219,7 +276,6 @@ public abstract class AbstractCalendarView extends LinearLayout {
                 throw new IllegalArgumentException("dayOfWeek is not valid. Pick a value between 1 and 7. " +
                         "dayOfWeek: " + dayOfWeek);
         }
-
     }
 
     @Override
@@ -237,7 +293,10 @@ public abstract class AbstractCalendarView extends LinearLayout {
     public void notifyDataSetChanged() {
 
     }
-    /** Getter methods */
+
+    /**
+     * Getter methods
+     */
     public int getFirstDayOfWeek() {
         return mFirstDayOfWeek;
     }
@@ -269,6 +328,7 @@ public abstract class AbstractCalendarView extends LinearLayout {
     /**
      * Get the number of days visible in one row.
      * For example, from monday to friday -> 5
+     *
      * @return the number of columns in a row
      */
     public int getDaysInRow() {
@@ -287,10 +347,20 @@ public abstract class AbstractCalendarView extends LinearLayout {
     }
 
     /**
+     * Return the currently selected dayStyle
+     * @return the selected day style.
+     */
+    public int getDayStyle() {
+        return mDayStyle;
+    }
+
+    /**
      * Retrieve the TextView used for the [timeInMillis] date
      *
-     * @param timeInMillis The time in milliseconds
+     * @param dayInMillis The time in milliseconds
      * @return The TextView representing the entered date
      */
     public abstract TextView getTextViewForDate(final long dayInMillis);
+
+
 }

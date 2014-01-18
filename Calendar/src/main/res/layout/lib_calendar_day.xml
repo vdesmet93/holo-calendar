@@ -3,7 +3,6 @@
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="@dimen/lib_calendar_day_size"
-        android:background="@drawable/lib_calendar_background"
         android:layout_height="@dimen/lib_calendar_day_size"
         android:layout_marginLeft="@dimen/lib_calendar_day_padding_sides"
         android:layout_marginRight="@dimen/lib_calendar_day_padding_sides">
