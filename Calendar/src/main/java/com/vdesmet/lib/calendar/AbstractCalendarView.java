@@ -107,6 +107,9 @@ public abstract class AbstractCalendarView extends LinearLayout {
         mFirstDayOfWeek = day;
 
         if(mFirstValidDay != null) {
+            // Fix first day of week in the Calendar
+            mFirstValidDay.setFirstDayOfWeek(mFirstDayOfWeek);
+
             // update calendar
             updateCalendar();
         }
@@ -141,6 +144,7 @@ public abstract class AbstractCalendarView extends LinearLayout {
         firstValidDay.set(Calendar.MINUTE, 0);
         firstValidDay.set(Calendar.SECOND, 0);
         firstValidDay.set(Calendar.MILLISECOND, 0);
+        firstValidDay.setFirstDayOfWeek(mFirstDayOfWeek);
 
         mCurrentMonth = firstValidDay.get(Calendar.MONTH);
 

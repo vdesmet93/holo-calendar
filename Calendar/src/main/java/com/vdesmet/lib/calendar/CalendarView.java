@@ -361,13 +361,14 @@ public class CalendarView extends AbstractCalendarView implements View.OnClickLi
         /* Calculate the height of the weeks */
 
         // Create a calendar and set it to the last day of the month
-        final Calendar lastWeekOfMonth = Calendar.getInstance();
-        lastWeekOfMonth.setTimeInMillis(mCalendarFirstDay.getTimeInMillis());
-        lastWeekOfMonth.set(Calendar.DAY_OF_MONTH, lastWeekOfMonth.getActualMaximum(Calendar.DAY_OF_MONTH));
-
-        // Calculate the number of weeks in a month.
-        final int weeksInMonth = 1 +
-                lastWeekOfMonth.get(Calendar.WEEK_OF_YEAR) - mCalendarFirstDay.get(Calendar.WEEK_OF_YEAR);
+//        final Calendar lastWeekOfMonth = Calendar.getInstance();
+//        lastWeekOfMonth.setTimeInMillis(mCalendarFirstDay.getTimeInMillis());
+//        lastWeekOfMonth.set(Calendar.DAY_OF_MONTH, lastWeekOfMonth.getActualMaximum(Calendar.DAY_OF_MONTH));
+//
+//        // Calculate the number of weeks in a month.
+//        final int weeksInMonth = 1 +
+//                lastWeekOfMonth.get(Calendar.WEEK_OF_YEAR) - mCalendarFirstDay.get(Calendar.WEEK_OF_YEAR);
+        final int weeksInMonth = mFirstValidDay.getActualMaximum(Calendar.WEEK_OF_MONTH);
         final int weekHeight = dayWidth * weeksInMonth + (paddingSides * (weeksInMonth + 1) * 2);
 
         // The height is the height of all the weeks, plus the headers
