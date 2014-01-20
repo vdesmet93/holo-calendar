@@ -48,7 +48,7 @@ public class MultiCalendarView extends AbstractCalendarView {
         final MultiCalendarAdapter adapter = new MultiCalendarAdapter(getContext(), this);
         viewPager.setAdapter(adapter);
 
-        TitlePageIndicator indicator = new TitlePageIndicator(getContext());
+        final TitlePageIndicator indicator = new TitlePageIndicator(getContext());
         if(mTypeface != null) {
             indicator.setTypeface(mTypeface);
         }
@@ -146,5 +146,9 @@ public class MultiCalendarView extends AbstractCalendarView {
 
     public void setViewPagerPosition(final int viewPagerPosition) {
         mViewPagerPosition = viewPagerPosition;
+    }
+
+    public TitlePageIndicator getIndicator() {
+        return mIndicator;
     }
 }

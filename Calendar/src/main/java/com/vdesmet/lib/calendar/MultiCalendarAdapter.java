@@ -3,6 +3,7 @@ package com.vdesmet.lib.calendar;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.view.PagerAdapter;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -63,6 +64,7 @@ public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider 
         final int lastDayOfWeek = multiCalendarView.getLastDayOfWeek();
         final int dayStyle = multiCalendarView.getDayStyle();
         final Typeface typeface = multiCalendarView.getTypeface();
+        final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         // create first day of the monthView
         final Calendar firstMonthDay = Calendar.getInstance();
@@ -72,8 +74,10 @@ public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider 
             firstMonthDay.set(Calendar.DAY_OF_MONTH, 1);
         }
 
-        // create and configure the view
-        final CalendarView monthView = new CalendarView(context);
+        // create the View. Note that we use a container around the CalendarView to support wrap_content
+        final View monthViewContainer = inflater.inflate(R.layout.lib_calendar_single_month, container, false);
+        final CalendarView monthView = (CalendarView) monthViewContainer.findViewById(R.id.lib_calendar_single_month);
+
         monthView.setFirstValidDay(firstMonthDay);
 
         if(lastDay.get(Calendar.MONTH) == firstMonthDay.get(Calendar.MONTH)) {
@@ -95,8 +99,9 @@ public class MultiCalendarAdapter extends PagerAdapter implements TitleProvider 
         monthView.setDayStyle(dayStyle);
 
         // return view
-        container.addView(monthView);
-        return monthView;
+        container.addView(monthViewContainer);
+
+        return monthViewContainer;
     }
 
     @Override

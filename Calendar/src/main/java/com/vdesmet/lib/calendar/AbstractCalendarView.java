@@ -6,17 +6,22 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.vdesmet.lib.calendar.factory.DayStyleFactory;
+import com.viewpagerindicator.TitlePageIndicator;
 
 import java.util.Calendar;
 
 public abstract class AbstractCalendarView extends LinearLayout {
     public static final int MONTHS_IN_YEAR = 12;
     private static final int DAYS_IN_WEEK = 7;
+    private static final int MAX_WEEKS_IN_MONTH = 6;
 
     protected boolean mIsViewInitialized;
 
@@ -249,6 +254,108 @@ public abstract class AbstractCalendarView extends LinearLayout {
 
         // set calendar
         this.mCalendarFirstDay = calendar;
+    }
+
+    protected int getAvailableDayWidth(int width) {
+        // Calculate the available width for a single day-item
+        final int paddingSides = getResources()
+                .getDimensionPixelSize(R.dimen.lib_calendar_day_padding_sides);
+        final int screenWidth = width;
+        final int daysInRow = getDaysInRow();
+        final int availableWidth = screenWidth - (paddingSides * daysInRow * 2); // padding is at both sides( * 2)
+        final int widthPerTile = availableWidth / daysInRow;
+        final int maxWidthPerTile =
+                getResources().getDimensionPixelSize(R.dimen.lib_calendar_day_size);
+
+        // The maximum size of a tile(e.g. a single day)
+        // This is either R.dimen.lib_calendar_day_size or the width which fits the screen size
+        return Math.min(widthPerTile, maxWidthPerTile);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Override
+    protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
+        // Let our parent(a LinearLayout) measure first
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        // Check if we're allowed to resize our view's width
+        final int widthSpecMode = MeasureSpec.getMode(widthMeasureSpec);
+        final int maxWidth = MeasureSpec.getSize(widthMeasureSpec);
+        final boolean resizeWidth = widthSpecMode != MeasureSpec.EXACTLY;
+
+        // Variables where we'll store our measured width and height
+        int measuredWidth;
+        int measuredHeight;
+
+        // Retrieve some initial dimensions of our components
+        final int paddingSides = getResources()
+                .getDimensionPixelSize(R.dimen.lib_calendar_day_padding_sides);
+        final int daysInRow = getDaysInRow();
+
+        final int dayWidth;
+        if(resizeWidth) {
+            // We may resize our View, so use our preferred size
+            dayWidth = getResources().getDimensionPixelSize(R.dimen.lib_calendar_day_size);
+        }  else {
+            // We're not allowed to resize our View, so make sure it fits
+            dayWidth = getAvailableDayWidth(maxWidth);
+        }
+
+        // Calculate our width, based on the width of a single day, the padding and the number of days each week(row)
+        measuredWidth = (dayWidth * daysInRow) + (paddingSides * daysInRow * 2);
+
+        // Calculate a measured height of the headers by using a sample TextView
+        // First, create a TextView with sample text
+        final LayoutInflater inflater = (LayoutInflater)
+                getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final TextView sampleHeader = (TextView)
+                inflater.inflate(R.layout.lib_calendar_single_header, this, false);
+        sampleHeader.setText(R.string.lib_header_monday);
+        // Second, measure the TextView's height
+        int textWidthMeasureSpec = View.MeasureSpec.makeMeasureSpec(measuredWidth / daysInRow,
+                View.MeasureSpec.AT_MOST);
+        int textHeightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        sampleHeader.measure(textWidthMeasureSpec, textHeightMeasureSpec);
+        final int headerHeight = sampleHeader.getMeasuredHeight();
+
+        // Calculate the height of the weeks
+        final int weeksInMonth;
+        if(this instanceof CalendarView) {
+            // If we're a single month, calculate the actual height
+            weeksInMonth = mFirstValidDay.getActualMaximum(Calendar.WEEK_OF_MONTH);
+        }  else {
+            weeksInMonth = MAX_WEEKS_IN_MONTH;
+        }
+        final int weekHeight = dayWidth * weeksInMonth + (paddingSides * (weeksInMonth + 1) * 2);
+
+        // The height is the height of all the weeks, plus the headers
+        measuredHeight = weekHeight + headerHeight;
+
+
+        // If we're MultiCalendarView, also add the height of the TitlePageIndicator
+        if(this instanceof  MultiCalendarView) {
+            final MultiCalendarView multiCalendarView = (MultiCalendarView) this;
+            final TitlePageIndicator indicator = multiCalendarView.getIndicator();
+
+            // Use the width we measured, and let the Indicator calculate it's height
+            int indicatorWidthMeasureSpec = View.MeasureSpec.makeMeasureSpec(
+                    resolveSize(measuredWidth, widthMeasureSpec), MeasureSpec.EXACTLY);
+            int indicatorHeightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+            indicator.measure(indicatorWidthMeasureSpec, indicatorHeightMeasureSpec);
+            final int indicatorHeight = indicator.getMeasuredHeight();
+
+            // Now we have the height, update our ViewPager with the new dimensions
+            indicatorHeightMeasureSpec = View.MeasureSpec.makeMeasureSpec(measuredHeight, MeasureSpec.EXACTLY);
+            final ViewPager viewPager = multiCalendarView.getViewPager();
+            viewPager.measure(indicatorWidthMeasureSpec, indicatorHeightMeasureSpec);
+
+            // Add the indicator height to the measured height
+            measuredHeight += indicatorHeight;
+        }
+
+        // Set the measured dimensions
+        setMeasuredDimension(resolveSize(measuredWidth, widthMeasureSpec),
+                resolveSize(measuredHeight, heightMeasureSpec));
     }
 
     /**
