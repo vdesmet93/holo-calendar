@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.viewpagerindicator.TitlePageIndicator;
@@ -84,14 +85,16 @@ public class MultiCalendarView extends AbstractCalendarView {
         for(int i = 0; i < childCount; i++) {
             final View child = mViewPager.getChildAt(i);
 
-            if(child != null && child instanceof CalendarView) {
-                final CalendarView monthView = (CalendarView) child;
-
-                // Let the (single) CalendarView find a suitable TextView
-                final TextView result = monthView.getTextViewForDate(dayInMillis);
-                if(result != null) {
-                    // If one is found, return it
-                    return result;
+            if(child != null && child instanceof ViewGroup) {
+                // The CalendarView is the first child in our ViewGroup
+                final CalendarView monthView = (CalendarView) ((ViewGroup) child).getChildAt(0);
+                if(monthView != null) {
+                    // Let the (single) CalendarView find a suitable TextView
+                    final TextView result = monthView.getTextViewForDate(dayInMillis);
+                    if(result != null) {
+                        // If one is found, return it
+                        return result;
+                    }
                 }
             }
         }
